@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -206,64 +205,70 @@
 <body>
 
     <header>
-    <div class="logo-container">
-        <img src="logo.png" width="300" height="450" alt="לוגו אריות חיפה">
-    </div>
-    <h1>אריות חיפה</h1>
-    <div class="motto">Always Paddling Together</div>
-</header>
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="logo.png" alt="לוגו אריות חיפה">
+            </div>
+            <h1>אריות חיפה</h1>
+            <div class="motto">Always Paddling Together</div>
+        </div>
+    </header>
 
     <nav>
-        <button onclick="switchPage('home')" id="btn-home" class="active">דף הבית</button>
+        <button onclick="switchPage('home')" id="btn-home" class="active">על הקבוצה</button>
         <button onclick="switchPage('gallery')" id="btn-gallery">גלריית מדיה</button>
     </nav>
 
     <div class="container">
         <div id="home" class="page active">
-            <div class="hero">
-                <h2>ברוכים הבאים לבית של החותרים בצפון</h2>
-                <p>עוצמה, קצב ועבודת צוות על המים</p>
+            <div class="hero-banner">
+                <h2>עוצמה. קצב. נשמה.</h2>
+                <p>הצטרפו לנבחרת הדרקונים המובילה בצפון</p>
             </div>
-            <div class="about-section">
-                <h3>מהן סירות דרקון?</h3>
-                <p>סירות דרקון הן סירות משוטים ארוכות וקבוצתיות שמקורן במסורת סינית עתיקה בת אלפי שנים. כיום, זהו אחד מענפי ספורט המים הצומחים והמרתקים ביותר בעולם, המשלב כושר גופני גבוה עם חוויה חברתית יוצאת דופן.</p>
-                <p>הסירה מעוצבת בצורת דרקון מסורתי ומאכלסת צוות חותרים הפועלים בסנכרון מוחלט. בחרטום הסירה יושב <strong>מתופף</strong> שתפקידו להכתיב את קצב החתירה בעזרת תוף גדול, ובירכתיים נמצא <strong>ההגאי</strong> שמנווט את הסירה ושומר על מסלול בטוח. ההצלחה בסירת דרקון לא תלויה רק בכוח פיזי, אלא בעיקר בכימיה, באחידות וברוח הקבוצתית – כולם חותרים יחד כמו גוף אחד!</p>
-                <p>קבוצת <strong>"אריות חיפה"</strong> מזמינה חותרים וחותרות בכל הרמות להצטרף אלינו לאימונים בים, לחוות את האנרגיה המטורפת, לשפר את הכושר וליהנות מקהילה מנצחת.</p>
+            <div class="about-card">
+                <h3>סירות דרקון - הרבה מעבר לספורט</h3>
+                <p>סירות הדרקון משלבות מסורת עתיקה עם אתגר ספורטיבי מודרני. בחרטום הסירה יושב המתופף שמכתיב את הדופק, ובירכתיים ההגאי שמנווט את הדרך – אבל הלב של הסירה הוא החותרים.</p>
+                <p><strong>"אריות חיפה"</strong> היא קבוצה ששמה דגש על שילוב של הישגיות גופנית עם גיבוש חברתי עמוק. אנחנו חותרים בתיאום מושלם, כשהמטרה היא לא רק להגיע לקו הסיום, אלא לעשות זאת כגוף אחד, בעוצמה ובאנרגיה שמייחדת רק אותנו.</p>
             </div>
         </div>
 
         <div id="gallery" class="page">
-            <h2>הגלריה של האריות</h2>
-            <p>התמונות והסרטונים מהאימונים והתחרויות שלנו, מסונכרנים ישירות מהדרייב.</p>
-            <div id="loadingText" class="loading">טוען תונות וסרטונים מהדרייב... ⏳</div>
+            <h2 style="color: var(--haifa-blue); text-align: center;">האריות בפעולה</h2>
+            <div id="loadingText" class="loading-spinner">מתחברים לדרייב ושולפים מדיה... 🦁</div>
             <div class="gallery-grid" id="galleryGrid"></div>
         </div>
     </div>
 
     <footer>
-        <p>מעוניינים להצטרף אלינו או לשאול שאלות? נשמח לשמוע מכם!</p>
-        <div class="contact-info">
+        <p style="font-weight: bold; color: var(--haifa-blue);">רוצים לחתור איתנו? צרו קשר!</p>
+        <div class="contact-box">
             📞 עמי: <a href="tel:0544257645">054-4257645</a> | 
-            ✉️ מייל: <a href="mailto:michal.ostrov@gmail.com">michal.ostrov@gmail.com</a>
+            ✉️ <a href="mailto:michal.ostrov@gmail.com">שלחו לנו מייל</a>
         </div>
-        <p style="margin-top: 1.5rem; font-size: 0.85rem; opacity: 0.7;">© 2026 אריות חיפה. כל הזכויות שמורות לקבוצה.</p>
+        <p style="margin-top: 2rem; font-size: 0.8rem; color: #94a3b8;">© 2026 Haifa Lions Team. All Rights Reserved.</p>
     </footer>
 
     <script>
+        // ניווט דפים
         function switchPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-            
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             document.getElementById('btn-' + pageId).classList.add('active');
-            
-            if(pageId === 'gallery') {
-                loadDriveGallery();
-            }
+            if(pageId === 'gallery') loadDriveGallery();
         }
 
-        // ה-JSON ששלחת מוכיח שהכתובת הזו מושלמת!
-        const MACRO_URL = "https://script.google.com/macros/s/AKfycbwbTUe_fHbF1pi-tH37stqvnA0KPrXvF9blWoRS0Q_xthzhKlqQkL56MfsvWCBjscLp/exec";
+        // הכתובת הדינמית שלך מגוגל (JSONP)
+        const MACRO_URL = "https://script.google.com/macros/s/AKfycbwbTUe_fHbF1pi-tH37stqvnA0KPrXvF9blWoRS0Q_xthzhKlqQkL56MfsvWCBjscLp/exec"
+
+            const grid = document.getElementById('galleryGrid');
+            if (grid.children.length > 0) return; 
+
+            // הפעלת מנגנון JSONP דינמי
+            const script = document.createElement('script');
+            script.src = MACRO_URL;
+            document.body.appendChild(script);
+        }
 
         // רנדור הקבצים שהתקבלו בזמן אמת מהדרייב
         function renderGallery(data) {
