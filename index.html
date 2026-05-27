@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אריות חיפה - Always Paddling Together</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&family=Secular+One&display=swap" rel="stylesheet">
+    <style>
+        /* הגדרת צבעי הלוגו */
+        :root {
+            --haifa-blue: #163C7D;  /* הכחול העמוק מהלוגו */
+            --haifa-red: #D12C33;   /* האדום מהמברשת */
+            --haifa-gold: #E9B42A;  /* הצהוב מהכנף */
+            --haifa-green: #2E7D32; /* הירוק מהמברשת */
+            --bg-light: #F8FAFC;
+            --text-dark: #1E293B;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Assistant', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            scroll-behavior: smooth;
+        }
+
+        /* עיצוב הלוגו והכותרת - מעודכן לגודל סביר ואלגנטי */
+        header {
+            background-color: white;
+            padding: 1.2rem 1rem;
+            text-align: center;
+            border-bottom: 4px solid var(--haifa-blue);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .logo-container {
+            margin-bottom: 5px;
+        }
+
+        /* הגבלת גודל הלוגו בצורה מדויקת */
+        .logo-container img {
+            height: 90px; /* גובה פרופורציונלי וסביר בהחלט */
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container img:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            font-family: 'Secular One', sans-serif;
+            color: var(--haifa-blue);
+            margin: 0;
+            font-size: 2rem;
+            letter-spacing: 0.5px;
+        }
+
+        .motto {
+            color: var(--haifa-red);
+            font-weight: bold;
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        /* ניווט */
+        nav {
+            background-color: var(--haifa-blue);
+            display: flex;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        nav button:hover, nav button.active {
+            background-color: var(--haifa-gold);
+            color: var(--haifa-blue);
+        }
+
+        /* תוכן האתר */
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 20px;
+            min-height: 70vh;
+        }
+
+        .page { display: none; }
+        .page.active { display: block; animation: slideIn 0.5s ease-out; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* עיצוב דף הבית */
+        .hero-banner {
+            background: linear-gradient(135deg, var(--haifa-blue), #2a5298);
+            color: white;
+            padding: 3.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(22, 60, 125, 0.15);
+        }
+
+        .hero-banner h2 { font-size: 2.3rem; margin-bottom: 0.5rem; margin-top: 0; }
+        .hero-banner p { font-size: 1.2rem; margin: 0; opacity: 0.9; }
+
+        .about-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            line-height: 1.8;
+            border-right: 8px solid var(--haifa-red);
+            font-size: 1.1rem;
+        }
+
+        .about-card h3 { color: var(--haifa-blue); font-size: 1.6rem; margin-top: 0; }
+
+        /* גלריה */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .gallery-item iframe {
+            border: none;
+            display: block;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            color: var(--haifa-blue);
+            font-weight: bold;
+        }
+
+        /* פוטר */
+        footer {
+            background-color: #f1f5f9;
+            padding: 3rem 1rem;
+            text-align: center;
+            margin-top: 5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .contact-box {
+            background: white;
+            display: inline-block;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 2px solid var(--haifa-gold);
+        }
+
+        .contact-box a {
+            color: var(--haifa-blue);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.15rem;
+        }
+
+        .contact-box a:hover { color: var(--haifa-red); }
+    </style>
+</head>
+<body>
+
+    <header>
+    <div class="logo-container">
+        <img src="logo.png" width="300" height="450" alt="לוגו אריות חיפה">
+    </div>
+    <h1>אריות חיפה</h1>
+    <div class="motto">Always Paddling Together</div>
+</header>
+
+    <nav>
+        <button onclick="switchPage('home')" id="btn-home" class="active">דף הבית</button>
+        <button onclick="switchPage('gallery')" id="btn-gallery">גלריית מדיה</button>
+    </nav>
+
+    <div class="container">
+        <div id="home" class="page active">
+            <div class="hero">
+                <h2>ברוכים הבאים לבית של החותרים בצפון</h2>
+                <p>עוצמה, קצב ועבודת צוות על המים</p>
+            </div>
+            <div class="about-section">
+                <h3>מהן סירות דרקון?</h3>
+                <p>סירות דרקון הן סירות משוטים ארוכות וקבוצתיות שמקורן במסורת סינית עתיקה בת אלפי שנים. כיום, זהו אחד מענפי ספורט המים הצומחים והמרתקים ביותר בעולם, המשלב כושר גופני גבוה עם חוויה חברתית יוצאת דופן.</p>
+                <p>הסירה מעוצבת בצורת דרקון מסורתי ומאכלסת צוות חותרים הפועלים בסנכרון מוחלט. בחרטום הסירה יושב <strong>מתופף</strong> שתפקידו להכתיב את קצב החתירה בעזרת תוף גדול, ובירכתיים נמצא <strong>ההגאי</strong> שמנווט את הסירה ושומר על מסלול בטוח. ההצלחה בסירת דרקון לא תלויה רק בכוח פיזי, אלא בעיקר בכימיה, באחידות וברוח הקבוצתית – כולם חותרים יחד כמו גוף אחד!</p>
+                <p>קבוצת <strong>"אריות חיפה"</strong> מזמינה חותרים וחותרות בכל הרמות להצטרף אלינו לאימונים בים, לחוות את האנרגיה המטורפת, לשפר את הכושר וליהנות מקהילה מנצחת.</p>
+            </div>
+        </div>
+
+        <div id="gallery" class="page">
+            <h2>הגלריה של האריות</h2>
+            <p>התמונות והסרטונים מהאימונים והתחרויות שלנו, מסונכרנים ישירות מהדרייב.</p>
+            <div id="loadingText" class="loading">טוען תונות וסרטונים מהדרייב... ⏳</div>
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>מעוניינים להצטרף אלינו או לשאול שאלות? נשמח לשמוע מכם!</p>
+        <div class="contact-info">
+            📞 עמי: <a href="tel:0544257645">054-4257645</a> | 
+            ✉️ מייל: <a href="mailto:michal.ostrov@gmail.com">michal.ostrov@gmail.com</a>
+        </div>
+        <p style="margin-top: 1.5rem; font-size: 0.85rem; opacity: 0.7;">© 2026 אריות חיפה. כל הזכויות שמורות לקבוצה.</p>
+    </footer>
+
+    <script>
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            document.getElementById('btn-' + pageId).classList.add('active');
+            
+            if(pageId === 'gallery') {
+                loadDriveGallery();
+            }
+        }
+
+        // ה-JSON ששלחת מוכיח שהכתובת הזו מושלמת!
+        const MACRO_URL = "https://script.google.com/macros/s/AKfycbzbQRGlGkDbo2CMJaPVCqDpFqAiw4lx_rxBJHGoySjx3chX5ZUOJ2KiiXQ-QGSR6y0z/exec";
+
+        function loadDriveGallery() {
+    const grid = document.getElementById('galleryGrid');
+    const loadingText = document.getElementById('loadingText');
+    
+    // מניעת טעינה כפולה אם הגלריה כבר מלאה
+    if (grid.children.length > 0) return; 
+
+    // פנייה לסקריפט של גוגל לקבלת הרשימה המעודכנת ביותר בזמן אמת
+    fetch(MACRO_URL, { method: 'GET', mode: 'cors', redirect: 'follow' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("שגיאת שרת: " + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            loadingText.style.display = 'none';
+            grid.innerHTML = ''; // ניקוי ה"טוען..."
+            
+            if (data.error) {
+                loadingText.innerText = "שגיאה מגוגל: " + data.error;
+                loadingText.style.display = 'block';
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                loadingText.innerText = "התיקייה ריקה כרגע. העלי אליה קבצים בדרייב והם יופיעו כאן!";
+                loadingText.style.display = 'block';
+                return;
+            }
+
+            // ריצה דינמית על הקבצים שהתקבלו מהסקריפט בגוגל
+            data.forEach(file => {
+                const div = document.createElement('div');
+                div.classList.add('gallery-item');
+                
+                // שליפת ה-ID מתוך ה-URL שהסקריפט מחזיר
+                // ה-URL נראה ככה: https://docs.google.com/uc?export=view&id=XXXXX
+                const fileId = file.url.split('id=')[1];
+
+                if (fileId) {
+                    const iframe = document.createElement('iframe');
+                    iframe.src = `https://drive.google.com/file/d/${fileId}/preview`;
+                    iframe.width = "100%";
+                    iframe.height = "240px";
+                    iframe.style.border = "none";
+                    iframe.allow = "autoplay";
+                    
+                    div.appendChild(iframe);
+                    grid.appendChild(div);
+                }
+            });
+        })
+        .catch(error => {
+            console.error("שגיאה מפורטת בטעינה הדינמית:", error);
+            loadingText.innerText = "אירעה שגיאה בתקשורת הדינמית עם הדרייב. ודא שהאתר רץ בסביבת רשת או שהסקריפט פתוח לכולם.";
+        });
+
+}
+    </script>
+</body>
+</html>
