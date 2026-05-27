@@ -263,67 +263,38 @@
         }
 
         // ה-JSON ששלחת מוכיח שהכתובת הזו מושלמת!
-        const MACRO_URL = "https://script.google.com/macros/s/AKfycbzbQRGlGkDbo2CMJaPVCqDpFqAiw4lx_rxBJHGoySjx3chX5ZUOJ2KiiXQ-QGSR6y0z/exec";
+        const MACRO_URL = "https://script.google.com/macros/s/AKfycbwbTUe_fHbF1pi-tH37stqvnA0KPrXvF9blWoRS0Q_xthzhKlqQkL56MfsvWCBjscLp/exec";
 
-        function loadDriveGallery() {
-    const grid = document.getElementById('galleryGrid');
-    const loadingText = document.getElementById('loadingText');
-    
-    // מניעת טעינה כפולה אם הגלריה כבר מלאה
-    if (grid.children.length > 0) return; 
-
-    // פנייה לסקריפט של גוגל לקבלת הרשימה המעודכנת ביותר בזמן אמת
-    fetch(MACRO_URL, { method: 'GET', mode: 'cors', redirect: 'follow' })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("שגיאת שרת: " + response.status);
-            }
-            return response.json();
-        })
-        .then(data => {
+        // רנדור הקבצים שהתקבלו בזמן אמת מהדרייב
+        function renderGallery(data) {
+            const grid = document.getElementById('galleryGrid');
+            const loadingText = document.getElementById('loadingText');
             loadingText.style.display = 'none';
-            grid.innerHTML = ''; // ניקוי ה"טוען..."
-            
-            if (data.error) {
-                loadingText.innerText = "שגיאה מגוגל: " + data.error;
+            grid.innerHTML = '';
+
+            if (!data || data.length === 0 || data.error) {
+                loadingText.innerText = "לא נמצאה מדיה בתיקייה הציבורית.";
                 loadingText.style.display = 'block';
                 return;
             }
 
-            if (!data || data.length === 0) {
-                loadingText.innerText = "התיקייה ריקה כרגע. העלי אליה קבצים בדרייב והם יופיעו כאן!";
-                loadingText.style.display = 'block';
-                return;
-            }
-
-            // ריצה דינמית על הקבצים שהתקבלו מהסקריפט בגוגל
             data.forEach(file => {
                 const div = document.createElement('div');
                 div.classList.add('gallery-item');
                 
-                // שליפת ה-ID מתוך ה-URL שהסקריפט מחזיר
-                // ה-URL נראה ככה: https://docs.google.com/uc?export=view&id=XXXXX
                 const fileId = file.url.split('id=')[1];
 
                 if (fileId) {
                     const iframe = document.createElement('iframe');
                     iframe.src = `https://drive.google.com/file/d/${fileId}/preview`;
                     iframe.width = "100%";
-                    iframe.height = "240px";
-                    iframe.style.border = "none";
+                    iframe.height = "280px";
                     iframe.allow = "autoplay";
-                    
                     div.appendChild(iframe);
                     grid.appendChild(div);
                 }
             });
-        })
-        .catch(error => {
-            console.error("שגיאה מפורטת בטעינה הדינמית:", error);
-            loadingText.innerText = "אירעה שגיאה בתקשורת הדינמית עם הדרייב. ודא שהאתר רץ בסביבת רשת או שהסקריפט פתוח לכולם.";
-        });
-
-}
+        }
     </script>
 </body>
 </html>
