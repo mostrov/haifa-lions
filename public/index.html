@@ -12,16 +12,17 @@
             --bg-main: #f0f4f8;
             --text-dark: #1e293b;
         }
-		
-		#media-container .card img {
-    width: 100% !important;
-    height: auto !important;
-    max-height: 600px !important;
-    object-fit: contain !important;
-    background-color: #f8f9fa;
-    display: block;
-    margin: 0 auto;
-}
+        
+        #media-container .card img {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 600px !important;
+            object-fit: contain !important;
+            background-color: #f8f9fa;
+            display: block;
+            margin: 0 auto;
+            cursor: pointer;
+        }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; }
@@ -151,6 +152,14 @@
         </section>
     </main>
 
+    <!-- חלון צפייה מלאה (Modal) -->
+    <div id="viewModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:2000; justify-content:center; align-items:center; padding:20px;">
+        <div style="background:white; max-width:800px; width:100%; padding:30px; border-radius:12px; position:relative; max-height:90vh; overflow-y:auto;">
+            <button onclick="closeModal()" style="position:absolute; top:15px; left:15px; background:#ef4444; color:white; border:none; padding:5px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">X סגור</button>
+            <div id="modal-content-body"></div>
+        </div>
+    </div>
+
     <footer>
         לתיאום אימון ללא עלות - עמי 054-4257645
     </footer>
@@ -172,32 +181,38 @@
                     const container = document.getElementById('articles-container');
                     if (data.length === 0) { container.innerHTML = '<p>אין מאמרים כרגע.</p>'; return; }
                     container.innerHTML = data.map(art => `
-                        <div class="card">
+                        <div class="card" style="cursor: pointer;" onclick="openArticleModal('${escapeHtml(art.title)}', '${escapeHtml(art.content)}', '${art.date}')">
                             <h3>${art.title}</h3>
                             <small style="color:#64748b; display:block; margin-bottom:12px;">${art.date}</small>
-                            <p>${art.content}</p>
+                            <p style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${art.content}</p>
+                            <span style="color: var(--secondary); font-weight: bold; font-size: 14px; display: inline-block; margin-top: 10px;">קרא עוד...</span>
                         </div>
                     `).join('');
                 });
         }
 
         function loadMedia() {
-    fetch('/api/media')
-        .then(res => res.json())
-        .then(data => {
-            const container = document.getElementById('media-container');
-            if (data.length === 0) { container.innerHTML = '<p>אין מדיה להצגה.</p>'; return; }
-            container.innerHTML = data.map(med => `
-                <div class="card">
-                    <h3>${med.title}</h3>
-                    ${med.type === 'video' 
-                        ? `<video controls width="100%" style="border-radius:8px; max-height:300px;"><source src="${med.url}" type="video/mp4">הדפדפן שלך אינו תומך בוידאו.</video>`
-                        : `<img src="${med.url}" alt="${med.title}" style="width:100%; max-height:500px; object-fit:contain; border-radius:8px; background:#f8f9fa;">`
-                    }
-                </div>
-            `).join('');
-        });
-}
+            fetch('/api/media')
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('media-container');
+                    if (data.length === 0) { container.innerHTML = '<p>אין מדיה להצגה.</p>'; return; }
+                    container.innerHTML = data.map(med => `
+                        <div class="card">
+                            <h3>${med.title}</h3>
+                            ${med.type === 'video' 
+                                ? `<video controls width="100%" style="border-radius:8px; max-height:200px;"><source src="${med.url}" type="video/mp4">הדפדפן שלך אינו תומך בוידאו.</video>`
+                                : `<img src="${med.url}" alt="${med.title}" onclick="openImageModal('${med.url}', '${escapeHtml(med.title)}')">`
+                            }
+                            <small style="color: #64748b; display: block; margin-top: 8px; text-align: center; font-size: 13px;">לחץ על התמונה להגדלה</small>
+                        </div>
+                    `).join('');
+                });
+        }
+        
+        function escapeHtml(text) {
+            return text.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+        }
 
         function adminLogin() {
             password = document.getElementById('admin-pass').value;
@@ -285,6 +300,24 @@
                 html += '</ul>';
                 document.getElementById('admin-list').innerHTML = html;
             });
+        }
+
+        function openImageModal(url, title) {
+            const modal = document.getElementById('viewModal');
+            const body = document.getElementById('modal-content-body');
+            body.innerHTML = `<h2 style="margin-bottom:15px; border:none; padding:0;">${title}</h2><img src="${url}" style="width:100%; max-height:80vh; object-fit:contain; border-radius:8px;">`;
+            modal.style.display = 'flex';
+        }
+
+        function openArticleModal(title, content, date) {
+            const modal = document.getElementById('viewModal');
+            const body = document.getElementById('modal-content-body');
+            body.innerHTML = `<h2 style="margin-bottom:10px; border:none; padding:0;">${title}</h2><small style="color:#64748b; display:block; margin-bottom:20px;">${date}</small><p style="font-size:18px; line-height:1.8; color:#333;">${content}</p>`;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('viewModal').style.display = 'none';
         }
     </script>
 </body>
