@@ -1,504 +1,163 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אריות חיפה - קבוצת סירות דרקון | Haifa Lions Team</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Heebo -->
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Heebo', sans-serif;
-            background-color: #f0f7ff;
-            color: #1e293b;
-        }
-        .hero-bg {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 58, 138, 0.75)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-        }
-        .custom-shadow {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-red-500 selection:text-white">
-
-    <header class="bg-slate-900 text-white sticky top-0 z-50 border-b border-slate-800 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
-            
-            <!-- Logo & Team Name -->
-            <div class="flex items-center space-x-4 space-x-reverse cursor-pointer" onclick="switchTab('home')">
-                <img src="logo.png" alt="לוגו אריות חיפה" class="h-16 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-transform hover:scale-105" onerror="this.src='https://placehold.co/100x100/1e395b/ffffff?text=Lions'">
-                <div>
-                    <h1 class="text-2xl sm:text-3xl font-black tracking-wider bg-gradient-to-r from-red-500 via-amber-400 to-cyan-400 bg-clip-text text-transparent">
-                        אריות חיפה
-                    </h1>
-                    <p class="text-xs tracking-widest text-cyan-400 font-medium">HAIFA LIONS TEAM</p>
-                </div>
-            </div>
-
-            <!-- Desktop Navigation -->
-            <nav class="hidden md:flex items-center space-x-1 space-x-reverse font-medium">
-                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-xl transition-all duration-200 bg-blue-600 text-white shadow-md">דף הבית</button>
-                <button onclick="switchTab('articles')" id="nav-articles" class="nav-btn px-4 py-2 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800 hover:text-white">מאמרים</button>
-                <button onclick="switchTab('gallery')" id="nav-gallery" class="nav-btn px-4 py-2 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800 hover:text-white">תמונות וסרטונים</button>
-                <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn px-4 py-2 rounded-xl transition-all duration-200 text-amber-400 hover:bg-amber-400/10 flex items-center gap-1.5"><i class="fa-solid fa-lock text-xs"></i> דף מנהל</button>
-            </nav>
-
-            <!-- Mobile Menu Button -->
-            <div class="md:hidden flex items-center">
-                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-slate-300 hover:text-white focus:outline-none p-2 text-2xl">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-800 px-4 pt-2 pb-4 space-y-2">
-            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-right px-4 py-3 rounded-lg text-white bg-blue-600">דף הבית</button>
-            <button onclick="switchTab('articles'); toggleMobileMenu();" class="block w-full text-right px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800">מאמרים</button>
-            <button onclick="switchTab('gallery'); toggleMobileMenu();" class="block w-full text-right px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800">תמונות וסרטונים</button>
-            <button onclick="switchTab('admin'); toggleMobileMenu();" class="block w-full text-right px-4 py-3 rounded-lg text-amber-400 hover:bg-slate-800 font-semibold"><i class="fa-solid fa-lock text-xs ml-1"></i> דף מנהל</button>
-        </div>
-    </header>
-
-    <main class="flex-grow">
-
-        <!-- HOME TAB -->
-        <section id="tab-home" class="tab-content">
-            <!-- Hero Banner -->
-            <div class="hero-bg text-white py-20 lg:py-32 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
-                <div class="max-w-4xl mx-auto relative z-10">
-                    <span class="inline-block bg-red-600/80 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-sm font-semibold mb-6 tracking-wide shadow-lg uppercase">
-                        קבוצת סירות דרקון מובילה בצפון
-                    </span>
-                    <h2 class="text-4xl sm:text-6xl font-black tracking-tight mb-6 leading-tight">
-                        כוח, קצב, ולב פועם יחד <br><span class="text-cyan-400">על המים</span>
-                    </h2>
-                    <p class="text-lg sm:text-xl text-slate-200 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-                        בואו לחוות עוצמה קבוצתית אדירה, ספורט ימי מרתק וקהילה תומכת שמדביקה את הקצב בקצב התופים.
-                    </p>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <a href="tel:0544257645" class="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-xl shadow-xl transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg">
-                            <i class="fa-solid fa-phone"></i> תיאום אימון חינם עכשיו
-                        </a>
-                        <button onclick="switchTab('articles')" class="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 font-medium px-8 py-4 rounded-xl transition text-lg">
-                            קראו עוד עלינו
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- About Dragon Boat Section -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h3 class="text-blue-900 font-bold tracking-wider text-sm uppercase mb-2">הספורט המרתק בעולם</h3>
-                        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-6">מהי חתירה בסירות דרקון?</h2>
-                        <p class="text-slate-600 text-lg leading-relaxed mb-6">
-                            סירות דרקון (Dragon Boat) הן סירות ארוכות ומעוטרות בראש וזנב דרקון מסורתיים, שמקורן בסין העתיקה לפני יותר מ-2,000 שנה. כיום, זהו ספורט מים תחרותי וחברתי מהצומחים ביותר בעולם, המשלב בין עוצמה פיזית אדירה לבין סנכרון קבוצתי מושלם.
-                        </p>
-                        <p class="text-slate-600 text-lg leading-relaxed mb-8">
-                            בסירה אחת יושבים עד 20 חותרים ושחקני קצב (מתופף בקדמת הסירה ומכוון מאחור), המניעים את הסירה בתיאום מוחלט לפי קצב התוף. זהו ספורט שבו השלם גדול בהרבה מסכום חלקיו – אין מקום לאינדיבידואליזם טהור; ההצלחה תלויה בחיבור הקולקטיבי.
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-white p-5 rounded-2xl custom-shadow border-r-4 border-blue-600">
-                                <h4 class="font-bold text-lg text-slate-900 mb-2 flex items-center gap-2">
-                                    <i class="fa-solid fa-heart-pulse text-red-500"></i> יתרונות בריאותיים
-                                </h4>
-                                <p class="text-slate-600 text-sm">שיפור סיבולת לב-ריאה, חיזוק שרירי הליבה, הגב והכתפיים, ופעילות גופנית בעצימות גבוהה המותאמת לכולם.</p>
-                            </div>
-                            <div class="bg-white p-5 rounded-2xl custom-shadow border-r-4 border-amber-500">
-                                <h4 class="font-bold text-lg text-slate-900 mb-2 flex items-center gap-2">
-                                    <i class="fa-solid fa-users text-amber-500"></i> גיבוש וחברה
-                                </h4>
-                                <p class="text-slate-600 text-sm">יצירת חברויות אמיצות, שייכות לקבוצה תומכת ומעצימה, ופעילות מדהימה באוויר הפתוח בים החיפאי.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <div class="absolute -inset-4 bg-gradient-to-r from-blue-600 to-red-500 rounded-3xl opacity-25 blur-xl"></div>
-                        <div class="relative bg-white p-3 rounded-3xl custom-shadow">
-                            <img src="https://images.unsplash.com/photo-1569263979104-865ab9cd8d52?auto=format&fit=crop&w=1000&q=80" alt="סירת דרקון בפעולה" class="rounded-2xl w-full h-[400px] object-cover">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Call to Action Banner -->
-            <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 text-center">
-                <div class="max-w-3xl mx-auto">
-                    <h3 class="text-3xl font-bold mb-4">רוצים לנסות בעצמכם?</h3>
-                    <p class="text-slate-300 text-lg mb-8">אימון היכרות ראשון מתקיים ללא שום עלות או התחייבות. אנחנו נספק את כל הציוד וההדרכה המקצועית.</p>
-                    <a href="tel:0544257645" class="inline-flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xl px-8 py-4 rounded-2xl shadow-xl transition hover:scale-105">
-                        <i class="fa-solid fa-phone-volume"></i> צרו קשר עם עמי: 054-4257645
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- ARTICLES TAB -->
-        <section id="tab-articles" class="tab-content hidden py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-blue-600 font-bold text-sm tracking-wider uppercase bg-blue-100 px-3 py-1 rounded-full">מרכז הידע</span>
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 mt-3 mb-4">מאמרים וטיפים לחתירה נכונה</h2>
-                <p class="text-slate-600 text-lg">טיפים מקצועיים ממאמני הקבוצה על טכניקה, הכנה גופנית והעולם המרתק של סירות דרקון.</p>
-            </div>
-
-            <!-- Dynamic Articles Container -->
-            <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Injected via JavaScript -->
-            </div>
-        </section>
-
-        <!-- GALLERY TAB -->
-        <section id="tab-gallery" class="tab-content hidden py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-amber-600 font-bold text-sm tracking-wider uppercase bg-amber-100 px-3 py-1 rounded-full">החוויות שלנו</span>
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 mt-3 mb-4">גלריית תמונות וסרטונים</h2>
-                <p class="text-slate-600 text-lg">הצצה אל תוך האימונים המפרכים, התחרויות המרגשות והרגעים המיוחדים של אריות חיפה.</p>
-            </div>
-
-            <!-- Dynamic Media Container -->
-            <div id="gallery-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Injected via JavaScript -->
-            </div>
-        </section>
-
-        <!-- ADMIN TAB -->
-        <section id="tab-admin" class="tab-content hidden py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-            <div class="bg-white rounded-3xl custom-shadow p-6 sm:p-10 border border-slate-100">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-6 mb-8">
-                    <div>
-                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 flex items-center gap-3">
-                            <i class="fa-solid fa-gauge-high text-blue-600"></i> לוח בקרה למנהל
-                        </h2>
-                        <p class="text-slate-500 text-sm mt-1">הוסף מאמרים חדשים, תמונות או סרטונים ישירות לאתר בצורה פשוטה.</p>
-                    </div>
-                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">אזור מורשה</span>
-                </div>
-
-                <!-- Add Form Tabs -->
-                <div class="flex border-b border-slate-200 mb-6">
-                    <button onclick="switchAdminSubTab('article')" id="admin-tab-article" class="admin-sub-tab px-6 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition">הוספת מאמר</button>
-                    <button onclick="switchAdminSubTab('media')" id="admin-sub-tab-media" class="admin-sub-tab px-6 py-3 font-medium text-slate-500 hover:text-slate-800 transition">הוספת תמונה / סרטון</button>
-                </div>
-
-                <!-- Article Form -->
-                <form id="form-article" onsubmit="handleAddArticle(event)" class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">כותרת המאמר</label>
-                        <input type="text" id="art-title" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none transition" placeholder="לדוגמה: טיפים לשיפור קצב החתירה">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">קישור לתמונה (URL)</label>
-                        <input type="url" id="art-image" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none transition" placeholder="https://images.unsplash.com/...">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">תוכן המאמר</label>
-                        <textarea id="art-content" rows="5" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none transition" placeholder="כתוב כאן את תוכן המאמר המלא..."></textarea>
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-plus"></i> פרסם מאמר חדש
-                    </button>
-                </form>
-
-                <!-- Media Form -->
-                <form id="form-media" onsubmit="handleAddMedia(event)" class="space-y-6 hidden">
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">כותרת הפריט בגלריה</label>
-                        <input type="text" id="med-title" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none transition" placeholder="לדוגמה: אימון בוקר מול חופי חיפה">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">סוג פריט</label>
-                        <select id="med-type" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
-                            <option value="image">תמונה</option>
-                            <option value="video">סרטון (קישור YouTube או וידאו)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">כתובת הקישור (URL)</label>
-                        <input type="url" id="med-url" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none transition" placeholder="https://images.unsplash.com/... או קישור וידאו">
-                    </div>
-                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-upload"></i> הוסף פריט לגלריה
-                    </button>
-                </form>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="bg-slate-950 text-white border-t border-slate-800 py-8 px-4 sm:px-6 lg:px-8 mt-12">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-right">
-            
-            <!-- Team Info -->
-            <div class="flex items-center space-x-3 space-x-reverse">
-                <img src="logo.png" alt="לוגו אריות חיפה" class="h-10 w-auto object-contain" onerror="this.style.display='none'">
-                <div>
-                    <h3 class="font-bold text-lg text-white">אריות חיפה (Haifa Lions Team)</h3>
-                    <p class="text-xs text-slate-400">קבוצת סירות דרקון חיפה</p>
-                </div>
-            </div>
-
-            <!-- Mandatory Footer Text -->
-            <div class="bg-gradient-to-r from-red-600/20 via-blue-600/20 to-amber-500/20 border border-red-500/30 px-6 py-3 rounded-2xl shadow-inner">
-                <a href="tel:0544257645" class="text-lg sm:text-xl font-black text-white hover:text-cyan-400 transition flex items-center gap-3">
-                    <i class="fa-solid fa-phone text-red-500 animate-bounce"></i>
-                    <span>לתיאום אימון ללא עלות - עמי 054-4257645</span>
-                </a>
-            </div>
-
-            <!-- Copyright -->
-            <div class="text-xs text-slate-500">
-                &copy; 2026 כל הזכויות שמורות לאריות חיפה.
-            </div>
-        </div>
-    </footer>
-
-    <!-- Notification Modal (Custom Alert) -->
-    <div id="custom-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center custom-shadow transform transition-all scale-95 opacity-0" id="modal-content">
-            <div id="modal-icon" class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h3 id="modal-title" class="text-xl font-bold text-slate-900 mb-2">הודעה</h3>
-            <p id="modal-message" class="text-slate-600 mb-6">הפעולה בוצעה בהצלחה!</p>
-            <button onclick="closeModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition">אישור</button>
-        </div>
+<!-- דף ניהול מוגן בסיסמה -->
+<section id="admin" class="content-section" style="display:none;">
+    <h2>פאנל ניהול - אריות חיפה</h2>
+    
+    <!-- מסך כניסה -->
+    <div id="login-box" style="max-width: 400px; margin: 30px auto; background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h3>כניסת מנהל</h3>
+        <p>נא להזין סיסמת ניהול:</p>
+        <input type="password" id="admin-pass-input" placeholder="סיסמה" style="width:100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        <button onclick="checkAdminLogin()" style="width:100%; padding: 10px; background: #004080; color: white; border: none; border-radius: 4px; cursor: pointer;">התחבר</button>
     </div>
 
-    <script>
-        // Initial Mock Data
-        const defaultArticles = [
-            {
-                id: 1,
-                title: "הטכניקה הנכונה בחתירה: מאיפה מגיע הכוח?",
-                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80",
-                date: "12 במרץ, 2026",
-                content: "רבים חושבים שחתירה בסירות דרקון מבוססת רק על כוח הידיים, אך האמת היא שרוב הכוח נוצר מהרגליים, האגן ושרירי הליבה (Core). תנועת המשוט מתחילה בנעילת הרגל כנגד דופן הסירה ומסתיימת בסיבוב אגן מדויק."
-            },
-            {
-                id: 2,
-                title: "למה שווה להיכנס לסירת דרקון? יתרונות גופניים ונפשיים",
-                image: "https://images.unsplash.com/photo-1569263979104-865ab9cd8d52?auto=format&fit=crop&w=800&q=80",
-                date: "04 בפברואר, 2026",
-                content: "מעבר לעבודה האירובית המעולה ולחיזוק פלג גוף עליון ותחתון, חתירה בסירה קבוצתית משחררת אנדורפינים ומחזקת את החוסן הנפשי בזכות השותפות והנוף המרהיב של הים."
-            },
-            {
-                id: 3,
-                title: "ההיסטוריה המרתקת של פסטיבלי סירות הדרקון",
-                image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
-                date: "19 בינואר, 2026",
-                content: "שורשי הספורט נעוצים בסין העתיקה לזכרו של המשורר והפטריוט צ'ו יואן. היום הפך המנהג העתיק לאירוע ספורט עולמי ססגוני המאחד מיליוני חותרים ברחבי הגלובוס."
-            }
-        ];
+    <!-- תוכן הניהול (מוצג רק אחרי התחברות מוצלחת) -->
+    <div id="admin-panel-content" style="display:none;">
+        <div style="background: #eef2f7; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+            <h3>הוספת מאמר חדש</h3>
+            <input type="text" id="new-art-title" placeholder="כותרת המאמר" style="width:100%; padding:8px; margin-bottom:10px;">
+            <textarea id="new-art-content" placeholder="תוכן המאמר..." rows="4" style="width:100%; padding:8px; margin-bottom:10px;"></textarea>
+            <button onclick="addNewArticle()" style="background:#28a745; color:white; padding:10px 15px; border:none; border-radius:4px; cursor:pointer;">פרסם מאמר</button>
+        </div>
 
-        const defaultGallery = [
-            {
-                id: 1,
-                title: "אימון בוקר מול חופי חיפה המהממים",
-                type: "image",
-                url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 2,
-                title: "סנכרון מושלם לפי קצב התוף",
-                type: "image",
-                url: "https://images.unsplash.com/photo-1569263979104-865ab9cd8d52?auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 3,
-                title: "רגע לפני הזינוק לתחרות ארצית",
-                type: "image",
-                url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
-            }
-        ];
+        <div style="background: #eef2f7; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+            <h3>הוספת תמונה / סרטון (קישור מיוטיוב/רשת)</h3>
+            <select id="new-med-type" style="width:100%; padding:8px; margin-bottom:10px;">
+                <option value="video">סרטון (YouTube Embed URL)</option>
+                <option value="image">תמונה (קישור ישיר לתמונה)</option>
+            </select>
+            <input type="text" id="new-med-title" placeholder="כותרת המדיה" style="width:100%; padding:8px; margin-bottom:10px;">
+            <input type="text" id="new-med-url" placeholder="כתובת URL (למשל: https://...)" style="width:100%; padding:8px; margin-bottom:10px;">
+            <button onclick="addNewMedia()" style="background:#28a745; color:white; padding:10px 15px; border:none; border-radius:4px; cursor:pointer;">הוסף מדיה</button>
+        </div>
 
-        // Load or initialize LocalStorage
-        let articles = JSON.parse(localStorage.getItem('lions_articles')) || defaultArticles;
-        let gallery = JSON.parse(localStorage.getItem('lions_gallery')) || defaultGallery;
+        <div>
+            <h3>ניהול תכנים קיימים ומחיקה</h3>
+            <div id="admin-items-list"></div>
+        </div>
+    </div>
+</section>
 
-        // Navigation Switcher
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+<script>
+let adminPassword = "";
 
-            // Update Header Nav Buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn px-4 py-2 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800 hover:text-white";
-            });
-            const activeBtn = document.getElementById(`nav-${tabId}`);
-            if(activeBtn) {
-                if(tabId === 'admin') {
-                    activeBtn.className = "nav-btn px-4 py-2 rounded-xl transition-all duration-200 bg-amber-500 text-slate-950 font-bold shadow-md flex items-center gap-1.5";
-                } else {
-                    activeBtn.className = "nav-btn px-4 py-2 rounded-xl transition-all duration-200 bg-blue-600 text-white shadow-md";
-                }
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            renderArticles();
-            renderGallery();
-        }
+function checkAdminLogin() {
+    const passInput = document.getElementById('admin-pass-input').value;
+    // בדיקה ראשונית מול השרת ע"י שליחת בקשת בדיקה או שמירת הסיסמה
+    adminPassword = passInput;
+    
+    // נבצע קריאה לבדיקת תקינות עם הסיסמה
+    fetch('/api/articles')
+        .then(res => res.json())
+        .then(data => {
+            // אם הגענו לכאן השרת זמין, נציג את פאנל הניהול ונטען את הפריטים למחיקה
+            document.getElementById('login-box').style.display = 'none';
+            document.getElementById('admin-panel-content').style.display = 'block';
+            loadAdminItems();
+        })
+        .catch(err => alert('שגיאה בחיבור לשרת'));
+}
 
-        // Mobile Menu Toggle
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
+function addNewArticle() {
+    const title = document.getElementById('new-art-title').value;
+    const content = document.getElementById('new-art-content').value;
 
-        // Admin Sub-Tab Switcher
-        function switchAdminSubTab(sub) {
-            const formArt = document.getElementById('form-article');
-            const formMed = document.getElementById('form-media');
-            const btnArt = document.getElementById('admin-tab-article');
-            const btnMed = document.getElementById('admin-sub-tab-media');
+    fetch('/api/articles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content, password: adminPassword })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('סיסמה שגויה או שגיאה בנתונים');
+        return res.json();
+    })
+    .then(data => {
+        alert('המאמר נוסף בהצלחה!');
+        document.getElementById('new-art-title').value = '';
+        document.getElementById('new-art-content').value = '';
+        loadAdminItems();
+    })
+    .catch(err => alert(err.message));
+}
 
-            if(sub === 'article') {
-                formArt.classList.remove('hidden');
-                formMed.classList.add('hidden');
-                btnArt.className = "admin-sub-tab px-6 py-3 font-bold text-blue-600 border-b-2 border-blue-600 transition";
-                btnMed.className = "admin-sub-tab px-6 py-3 font-medium text-slate-500 hover:text-slate-800 transition";
-            } else {
-                formArt.classList.add('hidden');
-                formMed.classList.remove('hidden');
-                btnMed.className = "admin-sub-tab px-6 py-3 font-bold text-amber-600 border-b-2 border-amber-600 transition";
-                btnArt.className = "admin-sub-tab px-6 py-3 font-medium text-slate-500 hover:text-slate-800 transition";
-            }
-        }
+function addNewMedia() {
+    const type = document.getElementById('new-med-type').value;
+    const title = document.getElementById('new-med-title').value;
+    const url = document.getElementById('new-med-url').value;
 
-        // Render Articles
-        function renderArticles() {
-            const container = document.getElementById('articles-container');
-            if(!container) return;
-            container.innerHTML = '';
+    fetch('/api/media', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, url, title, password: adminPassword })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('סיסמה שגויה או שגיאה בנתונים');
+        return res.json();
+    })
+    .then(data => {
+        alert('המדיה נוספה בהצלחה!');
+        document.getElementById('new-med-title').value = '';
+        document.getElementById('new-med-url').value = '';
+        loadAdminItems();
+    })
+    .catch(err => alert(err.message));
+}
 
-            articles.forEach(art => {
-                const card = document.createElement('div');
-                card.className = "bg-white rounded-3xl custom-shadow overflow-hidden flex flex-col justify-between border border-slate-100 transition hover:-translate-y-1";
-                card.innerHTML = `
-                    <div>
-                        <img src="${art.image}" alt="${art.title}" class="w-full h-56 object-cover" onerror="this.src='https://placehold.co/600x400/1e395b/ffffff?text=Haifa+Lions'">
-                        <div class="p-6">
-                            <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">${art.date || 'היום'}</span>
-                            <h3 class="text-xl font-bold text-slate-900 mt-3 mb-3">${art.title}</h3>
-                            <p class="text-slate-600 text-sm leading-relaxed">${art.content}</p>
-                        </div>
-                    </div>
-                    <div class="px-6 pb-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4">
-                        <span class="text-xs text-slate-400 font-medium">אריות חיפה</span>
-                        <button onclick="showAlert('קריאת מאמר', 'בקרוב ייפתח עמוד מאמר מלא עם שיתוף ושמירה.')" class="text-blue-600 font-bold text-sm hover:underline flex items-center gap-1">
-                            קרא עוד <i class="fa-solid fa-arrow-left text-xs"></i>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
+function deleteArticle(id) {
+    if (!confirm('האם אתแนוחה שברצונך למחוק מאמר זה?')) return;
+    
+    fetch(`/api/articles/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('שגיאה במחיקה או סיסמה שגויה');
+        return res.json();
+    })
+    .then(() => {
+        alert('המאמר נמחק');
+        loadAdminItems();
+    })
+    .catch(err => alert(err.message));
+}
 
-        // Render Gallery
-        function renderGallery() {
-            const container = document.getElementById('gallery-container');
-            if(!container) return;
-            container.innerHTML = '';
+function deleteMedia(id) {
+    if (!confirm('האם את בטוחה שברצונך למחוק פריט מדיה זה?')) return;
+    
+    fetch(`/api/media/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('שגיאה במחיקה או סיסמה שגויה');
+        return res.json();
+    })
+    .then(() => {
+        alert('המדיה נמחקה');
+        loadAdminItems();
+    })
+    .catch(err => alert(err.message));
+}
 
-            gallery.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "bg-white rounded-3xl custom-shadow overflow-hidden border border-slate-100 group";
-                card.innerHTML = `
-                    <div class="relative overflow-hidden h-64">
-                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/1e395b/ffffff?text=Gallery+Item'">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
-                            <h4 class="text-white font-bold text-lg">${item.title}</h4>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-white">
-                        <h4 class="font-bold text-slate-900 text-md truncate">${item.title}</h4>
-                        <p class="text-xs text-slate-400 uppercase tracking-wider mt-1">${item.type === 'video' ? 'סרטון וידאו' : 'תמונה קבוצתית'}</p>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
+function loadAdminItems() {
+    const listDiv = document.getElementById('admin-items-list');
+    listDiv.innerHTML = '<p>טוען נתונים...</p>';
 
-        // Handle Add Article Form
-        function handleAddArticle(e) {
-            e.preventDefault();
-            const title = document.getElementById('art-title').value;
-            const image = document.getElementById('art-image').value;
-            const content = document.getElementById('art-content').value;
-
-            const newArticle = {
-                id: Date.now(),
-                title,
-                image,
-                date: new Date().toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' }),
-                content
-            };
-
-            articles.unshift(newArticle);
-            localStorage.setItem('lions_articles', JSON.stringify(articles));
-
-            document.getElementById('form-article').reset();
-            showAlert('הצלחה!', 'המאמר נוסף בהצלחה לאתר ועולה מיד לצפייה.');
-            renderArticles();
-        }
-
-        // Handle Add Media Form
-        function handleAddMedia(e) {
-            e.preventDefault();
-            const title = document.getElementById('med-title').value;
-            const type = document.getElementById('med-type').value;
-            const url = document.getElementById('med-url').value;
-
-            const newItem = {
-                id: Date.now(),
-                title,
-                type,
-                url
-            };
-
-            gallery.unshift(newItem);
-            localStorage.setItem('lions_gallery', JSON.stringify(gallery));
-
-            document.getElementById('form-media').reset();
-            showAlert('הצלחה!', 'הפריט נוסף בהצלחה לגלריה!');
-            renderGallery();
-        }
-
-        // Custom Modal Alert
-        function showAlert(title, message) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-message').innerText = message;
-            const modal = document.getElementById('custom-modal');
-            const content = document.getElementById('modal-content');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-                content.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('custom-modal');
-            const content = document.getElementById('modal-content');
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 200);
-        }
-
-        // Initial Load on Window Start
-        window.onload = function() {
-            renderArticles();
-            renderGallery();
-        };
-    </script>
-</body>
-</html>
+    Promise.all([
+        fetch('/api/articles').then(res => res.json()),
+        fetch('/api/media').then(res => res.json())
+    ]).then(([articles, mediaItems]) => {
+        let html = '<h4>מאמרים קיימים:</h4><ul>';
+        articles.forEach(art => {
+            html += `<li style="margin-bottom:8px;">${art.title} <button onclick="deleteArticle(${art.id})" style="background:#dc3545; color:white; border:none; padding:3px 8px; border-radius:3px; cursor:pointer; margin-right:10px;">מחק</button></li>`;
+        });
+        html += '</ul><h4>מדיה קיימת:</h4><ul>';
+        mediaItems.forEach(med => {
+            html += `<li style="margin-bottom:8px;">[${med.type}] ${med.title} <button onclick="deleteMedia(${med.id})" style="background:#dc3545; color:white; border:none; padding:3px 8px; border-radius:3px; cursor:pointer; margin-right:10px;">מחק</button></li>`;
+        });
+        html += '</ul>';
+        listDiv.innerHTML = html;
+    });
+}
+</script>
