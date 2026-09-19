@@ -1,18 +1,37 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const multer = require('multer');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// סיסמת הניהול (ניתן לשנות לכל סיסמה שתבחרי)
-const ADMIN_PASSWORD = 'HaifaLionsAreTheBest!123'; 
+const ADMIN_PASSWORD = 'HaifaLionsAreTheBest!123'; // סיסמת הניהול
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// וידוא שתיקיית ההעלאות קיימת
+const uploadDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// הגדרת אחסון הקבצים בעזרת Multer
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
+
+// הגשת קבצי האתר והקבצים שהועלו
 app.use(express.static(path.join(__dirname, 'public')));
 
-// בסיס נתונים זמני בזיכרון השרת
 let articles = [
     { 
         id: 1, 
@@ -22,29 +41,18 @@ let articles = [
     }
 ];
 
-let media = [
-    { id: 1, type: 'video', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', title: 'אימון לדוגמה בים' }
-];
+let media = [];
 
-// קבלת כל המאמרים (פתוח לכולם)
-app.get('/api/articles', (req, res) => {
-    res.json(articles);
-});
+// קבלת מאמרים ומדיה
+app.get('/api/articles', (req, res) => res.json(articles));
+app.get('/api/media', (req, res) => res.json(media));
 
-// קבלת כל המדיה (פתוח לכולם)
-app.get('/api/media', (req, res) => {
-    res.json(media);
-});
-
-// הוספת מאמר חדש (דורש סיסמה)
+// הוספת מאמר (עם סיסמה)
 app.post('/api/articles', (req, res) => {
     const { title, content, password } = req.body;
-    if (password !== ADMIN_PASSWORD) {
-        return res.status(401).json({ error: 'סיסמה שגויה!' });
-    }
-    if (!title || !content) {
-        return res.status(400).json({ error: 'יש לספק כותרת ותוכן למאמר' });
-    }
+    if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
+    if (!title || !content) return res.status(400).json({ error: 'חסרים נתונים' });
+    
     const newArticle = {
         id: Date.now(),
         title,
@@ -52,45 +60,49 @@ app.post('/api/articles', (req, res) => {
         date: new Date().toISOString().split('T')[0]
     };
     articles.push(newArticle);
-    res.status(201).json({ message: 'המאמר נוסף בהצלחה', article: newArticle });
+    res.status(201).json(newArticle);
 });
 
-// מחיקת מאמר (דורש סיסמה)
+// מחיקת מאמר
 app.delete('/api/articles/:id', (req, res) => {
     const { password } = req.body;
-    if (password !== ADMIN_PASSWORD) {
-        return res.status(401).json({ error: 'סיסמה שגויה!' });
-    }
-    const articleId = Number(req.params.id);
-    articles = articles.filter(a => a.id !== articleId);
-    res.json({ message: 'המאמר נמחק בהצלחה' });
+    if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
+    articles = articles.filter(a => a.id !== Number(req.params.id));
+    res.json({ message: 'נמחק בהצלחה' });
 });
 
-// הוספת מדיה חדשה (דורש סיסמה)
-app.post('/api/media', (req, res) => {
-    const { type, url, title, password } = req.body;
-    if (password !== ADMIN_PASSWORD) {
-        return res.status(401).json({ error: 'סיסמה שגויה!' });
-    }
-    if (!url) {
-        return res.status(400).json({ error: 'יש לספק כתובת URL למדיה' });
-    }
-    const newItem = { id: Date.now(), type, url, title: title || 'ללא כותרת' };
+// העלאת קובץ מדיה אמיתי (תמונה או סרטון) עם סיסמה
+app.post('/api/media', upload.single('mediaFile'), (req, res) => {
+    const { title, password, type } = req.body;
+    if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
+    if (!req.file) return res.status(400).json({ error: 'לא נבחר קובץ' });
+
+    const fileUrl = `/uploads/${req.file.filename}`;
+    const newItem = {
+        id: Date.now(),
+        type: type || 'image', // image או video
+        url: fileUrl,
+        title: title || 'ללא כותרת'
+    };
     media.push(newItem);
-    res.status(201).json({ message: 'המדיה נוספה בהצלחה', item: newItem });
+    res.status(201).json(newItem);
 });
 
-// מחיקת מדיה (דורש סיסמה)
+// מחיקת מדיה
 app.delete('/api/media/:id', (req, res) => {
     const { password } = req.body;
-    if (password !== ADMIN_PASSWORD) {
-        return res.status(401).json({ error: 'סיסמה שגויה!' });
+    if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
+    
+    const item = media.find(m => m.id === Number(req.params.id));
+    if (item && item.url.startsWith('/uploads/')) {
+        const filePath = path.join(__dirname, 'public', item.url);
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     }
-    const mediaId = Number(req.params.id);
-    media = media.filter(m => m.id !== mediaId);
-    res.json({ message: 'המדיה נמחקה בהצלחה' });
+    
+    media = media.filter(m => m.id !== Number(req.params.id));
+    res.json({ message: 'נמחק בהצלחה' });
 });
 
 app.listen(PORT, () => {
-    console.log(`השרת רץ בהצלחה בפורט ${PORT}`);
+    console.log(`השרת רץ בפורט ${PORT}`);
 });
