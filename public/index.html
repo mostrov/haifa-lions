@@ -164,8 +164,8 @@
         לתיאום אימון ללא עלות - עמי 054-4257645
     </footer>
 
-    <script>
-        let password = "";
+    let password = "";
+        let currentArticles = []; // משתנה שישמור את רשימת המאמרים המלאה
 
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
@@ -178,10 +178,11 @@
             fetch('/api/articles')
                 .then(res => res.json())
                 .then(data => {
+                    currentArticles = data; // שומר את המאמרים בזיכרון
                     const container = document.getElementById('articles-container');
                     if (data.length === 0) { container.innerHTML = '<p>אין מאמרים כרגע.</p>'; return; }
                     container.innerHTML = data.map(art => `
-                        <div class="card" style="cursor: pointer;" onclick="openArticleModal('${escapeHtml(art.title)}', '${escapeHtml(art.content)}', '${art.date}')">
+                        <div class="card" style="cursor: pointer;" onclick="openArticleModal(${art.id})">
                             <h3>${art.title}</h3>
                             <small style="color:#64748b; display:block; margin-bottom:12px;">${art.date}</small>
                             <p style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${art.content}</p>
@@ -309,10 +310,14 @@
             modal.style.display = 'flex';
         }
 
-        function openArticleModal(title, content, date) {
+        // שליפת המאמר מהזיכרון לפי ה-ID שלו והצגתו בחלון המוגדל
+        function openArticleModal(id) {
+            const art = currentArticles.find(a => a.id === id);
+            if (!art) return;
             const modal = document.getElementById('viewModal');
             const body = document.getElementById('modal-content-body');
-            body.innerHTML = `<h2 style="margin-bottom:10px; border:none; padding:0;">${title}</h2><small style="color:#64748b; display:block; margin-bottom:20px;">${date}</small><p style="font-size:18px; line-height:1.8; color:#333;">${content}</p>`;
+            // שימוש ב-white-space: pre-line כדי לשמור על מעבר שורות במאמר
+            body.innerHTML = `<h2 style="margin-bottom:10px; border:none; padding:0;">${art.title}</h2><small style="color:#64748b; display:block; margin-bottom:20px;">${art.date}</small><p style="font-size:18px; line-height:1.8; color:#333; white-space: pre-line;">${art.content}</p>`;
             modal.style.display = 'flex';
         }
 
@@ -321,4 +326,5 @@
         }
     </script>
 </body>
+
 </html>
