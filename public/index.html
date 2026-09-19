@@ -6,67 +6,84 @@
     <title>אריות חיפה - Haifa Lions Dragon Boat Team</title>
     <style>
         :root {
-            --primary-color: #0a2540;
-            --secondary-color: #0077b6;
-            --accent-color: #ff4d4d;
-            --bg-color: #f8f9fa;
-            --text-color: #333;
+            --primary: #0a2540;
+            --secondary: #0077b6;
+            --accent: #ff4d4d;
+            --accent-gradient: linear-gradient(135deg, #ff4d4d, #ff8e53);
+            --bg-main: #f0f4f8;
+            --text-dark: #1e293b;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
+        body { background-color: var(--bg-main); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; }
         
         /* Header */
         header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: linear-gradient(to right, #ffffff, #f8fafc);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
+            padding: 15px 40px;
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 3px solid var(--secondary);
         }
-        .logo-container { display: flex; align-items: center; gap: 15px; }
-        .logo-container img { height: 60px; width: auto; object-fit: contain; }
-        .logo-container h1 { font-size: 24px; color: var(--primary-color); font-weight: 800; }
+        .logo-container { display: flex; align-items: center; gap: 18px; }
+        .logo-container img { height: 65px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .logo-container h1 { font-size: 26px; color: var(--primary); font-weight: 800; letter-spacing: 0.5px; }
         
-        nav ul { display: flex; list-style: none; gap: 20px; }
-        nav a { text-decoration: none; color: var(--primary-color); font-weight: 600; cursor: pointer; transition: color 0.2s; }
-        nav a:hover { color: var(--accent-color); }
+        nav ul { display: flex; list-style: none; gap: 25px; }
+        nav a { text-decoration: none; color: var(--primary); font-weight: 700; cursor: pointer; font-size: 17px; transition: all 0.3s ease; padding: 8px 12px; border-radius: 6px; }
+        nav a:hover { color: white; background-color: var(--secondary); transform: translateY(-2px); }
 
-        /* Main Content */
-        main { flex: 1; max-width: 1100px; width: 100%; margin: 30px auto; padding: 0 20px; }
-        .content-section { display: none; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        /* Main Container */
+        main { flex: 1; max-width: 1150px; width: 100%; margin: 40px auto; padding: 0 20px; }
+        .content-section { display: none; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); animation: fadeIn 0.4s ease-in-out; }
         .content-section.active { display: block; }
         
-        h2 { color: var(--primary-color); margin-bottom: 20px; font-size: 28px; border-bottom: 3px solid var(--secondary-color); padding-bottom: 8px; display: inline-block; }
-        p { line-height: 1.8; margin-bottom: 15px; font-size: 17px; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        /* Grid for Media / Articles */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card { background: #fff; border: 1px solid #e1e4e8; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .card h3 { color: var(--secondary-color); margin-bottom: 10px; }
+        h2 { color: var(--primary); margin-bottom: 25px; font-size: 32px; font-weight: 800; border-right: 6px solid var(--accent); padding-right: 15px; }
+        p { line-height: 1.9; margin-bottom: 18px; font-size: 18px; color: #475569; }
+
+        /* Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 25px; }
+        .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: transform 0.3s, box-shadow 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .card h3 { color: var(--secondary); margin-bottom: 12px; font-size: 22px; }
 
         /* Footer */
         footer {
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             text-align: center;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: 600;
+            padding: 25px;
+            font-size: 20px;
+            font-weight: 700;
             margin-top: auto;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
+            border-top: 4px solid var(--accent);
         }
 
         /* Admin Styles */
-        .admin-box { background: #f1f5f9; padding: 20px; border-radius: 8px; margin-bottom: 25px; }
-        input, textarea, select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
-        button.btn { background: var(--secondary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        button.btn:hover { background: #005f9e; }
-        button.btn-danger { background: #dc3545; padding: 5px 10px; font-size: 14px; margin-top: 10px; }
-        button.btn-danger:hover { background: #b02a37; }
+        .admin-box { background: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
+        .admin-box h3 { color: var(--primary); margin-bottom: 15px; font-size: 20px; }
+        input, textarea, select { width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: white; transition: border-color 0.2s; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(0,119,182,0.1); }
+        
+        button.btn { background: var(--secondary); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: background 0.2s, transform 0.1s; }
+        button.btn:hover { background: #005f9e; transform: translateY(-1px); }
+        button.btn-danger { background: #ef4444; padding: 6px 14px; font-size: 14px; border-radius: 6px; }
+        button.btn-danger:hover { background: #dc2626; }
+        
+        .login-card { max-width: 450px; margin: 40px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); text-align: center; }
+        .login-card h3 { color: var(--primary); margin-bottom: 15px; font-size: 24px; }
     </style>
 </head>
 <body>
@@ -117,20 +134,20 @@
             <h2>פאנל ניהול אתר</h2>
             
             <!-- מסך התחברות -->
-            <div id="login-box" class="admin-box" style="max-width: 400px; margin: 0 auto;">
-                <h3>כניסת מנהל</h3>
-                <p style="font-size:14px; color:#666;">הזן סיסמת ניהול להעלאה ומחיקת תכנים:</p>
-                <input type="password" id="admin-pass" placeholder="סיסמה">
-                <button class="btn" style="width:100%;" onclick="adminLogin()">התחבר</button>
+            <div id="login-box" class="login-card">
+                <h3>כניסת מנהל מורשה</h3>
+                <p style="font-size:15px; color:#64748b; margin-bottom: 20px;">יש להזין סיסמת ניהול כדי להוסיף או למחוק תכנים מהאתר:</p>
+                <input type="password" id="admin-pass" placeholder="סיסמת ניהול">
+                <button class="btn" style="width:100%;" onclick="adminLogin()">התחבר למערכת</button>
             </div>
 
-            <!-- פאנל הניהול בפועל (מוסתר בהתחלה) -->
+            <!-- פאנל הניהול בפועל -->
             <div id="admin-content" style="display:none;">
                 <div class="admin-box">
                     <h3>הוספת מאמר חדש</h3>
                     <input type="text" id="art-title" placeholder="כותרת המאמר">
                     <textarea id="art-content" rows="4" placeholder="תוכן המאמר..."></textarea>
-                    <button class="btn" onclick="createArticle()">פרסם מאמר</button>
+                    <button class="btn" onclick="createArticle()">פרסם מאמר לאתר</button>
                 </div>
 
                 <div class="admin-box">
@@ -141,11 +158,11 @@
                     </select>
                     <input type="text" id="med-title" placeholder="כותרת המדיה">
                     <input type="text" id="med-url" placeholder="כתובת URL">
-                    <button class="btn" onclick="createMedia()">הוסף מדיה</button>
+                    <button class="btn" onclick="createMedia()">הוסף מדיה לגלריה</button>
                 </div>
 
                 <div class="admin-box">
-                    <h3>ניהול ותוכן קיים</h3>
+                    <h3>ניהול ותוכן קיים (מחיקת פריטים)</h3>
                     <div id="admin-list">טוען רשימת תכנים...</div>
                 </div>
             </div>
@@ -160,7 +177,6 @@
     <script>
         let password = "";
 
-        // מעבר בין דפים באתר
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
@@ -168,7 +184,6 @@
             if (sectionId === 'media') loadMedia();
         }
 
-        // טעינת מאמרים לקהל הרחב
         function loadArticles() {
             fetch('/api/articles')
                 .then(res => res.json())
@@ -181,14 +196,13 @@
                     container.innerHTML = data.map(art => `
                         <div class="card">
                             <h3>${art.title}</h3>
-                            <small style="color:#666; display:block; margin-bottom:10px;">${art.date}</small>
+                            <small style="color:#64748b; display:block; margin-bottom:12px; font-weight: 500;">${art.date}</small>
                             <p>${art.content}</p>
                         </div>
                     `).join('');
                 });
         }
 
-        // טעינת מדיה לגלריה
         function loadMedia() {
             fetch('/api/media')
                 .then(res => res.json())
@@ -202,15 +216,14 @@
                         <div class="card">
                             <h3>${med.title}</h3>
                             ${med.type === 'video' 
-                                ? `<iframe width="100%" height="180" src="${med.url}" frameborder="0" allowfullscreen></iframe>`
-                                : `<img src="${med.url}" alt="${med.title}" style="width:100%; height:180px; object-fit:cover; border-radius:4px;">`
+                                ? `<iframe width="100%" height="200" src="${med.url}" frameborder="0" allowfullscreen style="border-radius:8px;"></iframe>`
+                                : `<img src="${med.url}" alt="${med.title}" style="width:100%; height:200px; object-fit:cover; border-radius:8px;">`
                             }
                         </div>
                     `).join('');
                 });
         }
 
-        // התחברות לדף מנהל
         function adminLogin() {
             password = document.getElementById('admin-pass').value;
             fetch('/api/articles')
@@ -226,7 +239,6 @@
                 .catch(() => alert('שגיאה בחיבור לשרת'));
         }
 
-        // יצירת מאמר חדש
         function createArticle() {
             const title = document.getElementById('art-title').value;
             const content = document.getElementById('art-content').value;
@@ -245,7 +257,6 @@
             }).catch(err => alert('סיסמה שגויה או שגיאה בשמירה'));
         }
 
-        // יצירת מדיה חדשה
         function createMedia() {
             const type = document.getElementById('med-type').value;
             const title = document.getElementById('med-title').value;
@@ -265,7 +276,6 @@
             }).catch(err => alert('סיסמה שגויה או שגיאה בשמירה'));
         }
 
-        // מחיקת מאמר
         function removeArticle(id) {
             if (!confirm('האם למחוק מאמר זה?')) return;
             fetch(`/api/articles/${id}`, {
@@ -275,7 +285,6 @@
             }).then(() => loadAdminManager());
         }
 
-        // מחיקת מדיה
         function removeMedia(id) {
             if (!confirm('האם למחוק פריט זה?')) return;
             fetch(`/api/media/${id}`, {
@@ -285,19 +294,18 @@
             }).then(() => loadAdminManager());
         }
 
-        // טעינת רשימת הניהול והמחיקה בפאנל מנהל
         function loadAdminManager() {
             Promise.all([
                 fetch('/api/articles').then(r => r.json()),
                 fetch('/api/media').then(r => r.json())
             ]).then(([arts, meds]) => {
-                let html = '<h4>מאמרים לניהול:</h4><ul>';
+                let html = '<h4 style="color:var(--primary); margin-bottom:10px;">מאמרים קיימים:</h4><ul style="list-style:none;">';
                 arts.forEach(a => {
-                    html += `<li style="margin:8px 0;">${a.title} <button class="btn btn-danger" onclick="removeArticle(${a.id})">מחק</button></li>`;
+                    html += `<li style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; margin-bottom:8px; border-radius:6px; border:1px solid #e2e8f0;"><span>${a.title}</span> <button class="btn btn-danger" onclick="removeArticle(${a.id})">מחק</button></li>`;
                 });
-                html += '</ul><h4 style="margin-top:15px;">מדיה לניהול:</h4><ul>';
+                html += '</ul><h4 style="color:var(--primary); margin:20px 0 10px 0;">מדיה קיימת:</h4><ul style="list-style:none;">';
                 meds.forEach(m => {
-                    html += `<li style="margin:8px 0;">[${m.type}] ${m.title} <button class="btn btn-danger" onclick="removeMedia(${m.id})">מחק</button></li>`;
+                    html += `<li style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; margin-bottom:8px; border-radius:6px; border:1px solid #e2e8f0;"><span>[${m.type}] ${m.title}</span> <button class="btn btn-danger" onclick="removeMedia(${m.id})">מחק</button></li>`;
                 });
                 html += '</ul>';
                 document.getElementById('admin-list').innerHTML = html;
