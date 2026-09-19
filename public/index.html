@@ -164,8 +164,10 @@
         לתיאום אימון ללא עלות - עמי 054-4257645
     </footer>
 
-    let password = "";
-        let currentArticles = []; // משתנה שישמור את רשימת המאמרים המלאה
+    <!-- כל הסקריפטים מוקפים כראוי בתוך תגית script -->
+    <script>
+        let password = "";
+        let currentArticles = [];
 
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
@@ -178,7 +180,7 @@
             fetch('/api/articles')
                 .then(res => res.json())
                 .then(data => {
-                    currentArticles = data; // שומר את המאמרים בזיכרון
+                    currentArticles = data;
                     const container = document.getElementById('articles-container');
                     if (data.length === 0) { container.innerHTML = '<p>אין מאמרים כרגע.</p>'; return; }
                     container.innerHTML = data.map(art => `
@@ -310,13 +312,11 @@
             modal.style.display = 'flex';
         }
 
-        // שליפת המאמר מהזיכרון לפי ה-ID שלו והצגתו בחלון המוגדל
         function openArticleModal(id) {
             const art = currentArticles.find(a => a.id === id);
             if (!art) return;
             const modal = document.getElementById('viewModal');
             const body = document.getElementById('modal-content-body');
-            // שימוש ב-white-space: pre-line כדי לשמור על מעבר שורות במאמר
             body.innerHTML = `<h2 style="margin-bottom:10px; border:none; padding:0;">${art.title}</h2><small style="color:#64748b; display:block; margin-bottom:20px;">${art.date}</small><p style="font-size:18px; line-height:1.8; color:#333; white-space: pre-line;">${art.content}</p>`;
             modal.style.display = 'flex';
         }
@@ -326,5 +326,4 @@
         }
     </script>
 </body>
-
 </html>
