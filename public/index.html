@@ -9,7 +9,6 @@
             --primary: #0a2540;
             --secondary: #0077b6;
             --accent: #ff4d4d;
-            --accent-gradient: linear-gradient(135deg, #ff4d4d, #ff8e53);
             --bg-main: #f0f4f8;
             --text-dark: #1e293b;
         }
@@ -17,7 +16,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; }
         
-        /* Header */
         header {
             background: linear-gradient(to right, #ffffff, #f8fafc);
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -32,32 +30,23 @@
         }
         .logo-container { display: flex; align-items: center; gap: 18px; }
         .logo-container img { height: 65px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-        .logo-container h1 { font-size: 26px; color: var(--primary); font-weight: 800; letter-spacing: 0.5px; }
+        .logo-container h1 { font-size: 26px; color: var(--primary); font-weight: 800; }
         
         nav ul { display: flex; list-style: none; gap: 25px; }
-        nav a { text-decoration: none; color: var(--primary); font-weight: 700; cursor: pointer; font-size: 17px; transition: all 0.3s ease; padding: 8px 12px; border-radius: 6px; }
+        nav a { text-decoration: none; color: var(--primary); font-weight: 700; cursor: pointer; font-size: 17px; padding: 8px 12px; border-radius: 6px; transition: all 0.3s; }
         nav a:hover { color: white; background-color: var(--secondary); transform: translateY(-2px); }
 
-        /* Main Container */
         main { flex: 1; max-width: 1150px; width: 100%; margin: 40px auto; padding: 0 20px; }
-        .content-section { display: none; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); animation: fadeIn 0.4s ease-in-out; }
+        .content-section { display: none; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         .content-section.active { display: block; }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         h2 { color: var(--primary); margin-bottom: 25px; font-size: 32px; font-weight: 800; border-right: 6px solid var(--accent); padding-right: 15px; }
         p { line-height: 1.9; margin-bottom: 18px; font-size: 18px; color: #475569; }
 
-        /* Grid */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 25px; }
-        .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: transform 0.3s, box-shadow 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .card h3 { color: var(--secondary); margin-bottom: 12px; font-size: 22px; }
 
-        /* Footer */
         footer {
             background: var(--primary);
             color: white;
@@ -66,29 +55,23 @@
             font-size: 20px;
             font-weight: 700;
             margin-top: auto;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-            letter-spacing: 0.5px;
             border-top: 4px solid var(--accent);
         }
 
-        /* Admin Styles */
         .admin-box { background: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
         .admin-box h3 { color: var(--primary); margin-bottom: 15px; font-size: 20px; }
-        input, textarea, select { width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: white; transition: border-color 0.2s; }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(0,119,182,0.1); }
+        input, textarea, select { width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; background: white; }
         
-        button.btn { background: var(--secondary); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: background 0.2s, transform 0.1s; }
-        button.btn:hover { background: #005f9e; transform: translateY(-1px); }
+        button.btn { background: var(--secondary); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        button.btn:hover { background: #005f9e; }
         button.btn-danger { background: #ef4444; padding: 6px 14px; font-size: 14px; border-radius: 6px; }
         button.btn-danger:hover { background: #dc2626; }
         
         .login-card { max-width: 450px; margin: 40px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); text-align: center; }
-        .login-card h3 { color: var(--primary); margin-bottom: 15px; font-size: 24px; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <div class="logo-container">
             <img src="logo.png" alt="לוגו אריות חיפה">
@@ -104,61 +87,50 @@
         </nav>
     </header>
 
-    <!-- Main Container -->
     <main>
-        <!-- דף הבית -->
         <section id="home" class="content-section active">
             <h2>על סירות דרקון</h2>
             <p>ספורט סירות הדרקון (Dragon Boat) הוא אחד מענפי הספורט הקבוצתיים המרתקים, העתיקים והדינמיים ביותר בעולם. מקורו בסין לפני אלפי שנים, והיום הוא ספורט בינלאומי סוחף המשלב עוצמה פיזית אדירה, קצב משותף וחדוות חתירה בלב הים.</p>
             <p>קבוצת <strong>"אריות חיפה" (Haifa Lions Team)</strong> פועלת במפרץ חיפה ומזמינה אתכם להצטרף אלינו למסע ייחודי המשלב עבודת צוות מושלמת, כושר גופני וחיבור עוצמתי לטבע ולים.</p>
         </section>
 
-        <!-- דף מאמרים -->
         <section id="articles" class="content-section">
             <h2>מאמרים מקצועיים</h2>
-            <div id="articles-container" class="grid">
-                <p>טוען מאמרים...</p>
-            </div>
+            <div id="articles-container" class="grid"><p>טוען מאמרים...</p></div>
         </section>
 
-        <!-- דף תמונות וסרטונים -->
         <section id="media" class="content-section">
             <h2>גלריית תמונות וסרטונים</h2>
-            <div id="media-container" class="grid">
-                <p>טוען מדיה...</p>
-            </div>
+            <div id="media-container" class="grid"><p>טוען מדיה...</p></div>
         </section>
 
-        <!-- דף מנהל -->
         <section id="admin" class="content-section">
             <h2>פאנל ניהול אתר</h2>
             
-            <!-- מסך התחברות -->
             <div id="login-box" class="login-card">
                 <h3>כניסת מנהל מורשה</h3>
-                <p style="font-size:15px; color:#64748b; margin-bottom: 20px;">יש להזין סיסמת ניהול כדי להוסיף או למחוק תכנים מהאתר:</p>
+                <p style="font-size:15px; color:#64748b; margin-bottom: 20px;">הזן סיסמת ניהול להעלאת קבצים וניהול תכנים:</p>
                 <input type="password" id="admin-pass" placeholder="סיסמת ניהול">
                 <button class="btn" style="width:100%;" onclick="adminLogin()">התחבר למערכת</button>
             </div>
 
-            <!-- פאנל הניהול בפועל -->
             <div id="admin-content" style="display:none;">
                 <div class="admin-box">
                     <h3>הוספת מאמר חדש</h3>
                     <input type="text" id="art-title" placeholder="כותרת המאמר">
                     <textarea id="art-content" rows="4" placeholder="תוכן המאמר..."></textarea>
-                    <button class="btn" onclick="createArticle()">פרסם מאמר לאתר</button>
+                    <button class="btn" onclick="createArticle()">פרסם מאמר</button>
                 </div>
 
                 <div class="admin-box">
-                    <h3>הוספת מדיה (תמונה או סרטון)</h3>
+                    <h3>העלאת קובץ מדיה (תמונה או וידאו מהמחשב)</h3>
                     <select id="med-type">
-                        <option value="video">סרטון (קישור הטמעה מיוטיוב)</option>
-                        <option value="image">תמונה (קישור ישיר לתמונה)</option>
+                        <option value="image">תמונה</option>
+                        <option value="video">סרטון</option>
                     </select>
                     <input type="text" id="med-title" placeholder="כותרת המדיה">
-                    <input type="text" id="med-url" placeholder="כתובת URL">
-                    <button class="btn" onclick="createMedia()">הוסף מדיה לגלריה</button>
+                    <input type="file" id="med-file">
+                    <button class="btn" onclick="createMediaFile()">העלה קובץ לאתר</button>
                 </div>
 
                 <div class="admin-box">
@@ -169,7 +141,6 @@
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
         לתיאום אימון ללא עלות - עמי 054-4257645
     </footer>
@@ -189,14 +160,11 @@
                 .then(res => res.json())
                 .then(data => {
                     const container = document.getElementById('articles-container');
-                    if (data.length === 0) {
-                        container.innerHTML = '<p>אין מאמרים כרגע.</p>';
-                        return;
-                    }
+                    if (data.length === 0) { container.innerHTML = '<p>אין מאמרים כרגע.</p>'; return; }
                     container.innerHTML = data.map(art => `
                         <div class="card">
                             <h3>${art.title}</h3>
-                            <small style="color:#64748b; display:block; margin-bottom:12px; font-weight: 500;">${art.date}</small>
+                            <small style="color:#64748b; display:block; margin-bottom:12px;">${art.date}</small>
                             <p>${art.content}</p>
                         </div>
                     `).join('');
@@ -208,15 +176,12 @@
                 .then(res => res.json())
                 .then(data => {
                     const container = document.getElementById('media-container');
-                    if (data.length === 0) {
-                        container.innerHTML = '<p>אין מדיה להצגה.</p>';
-                        return;
-                    }
+                    if (data.length === 0) { container.innerHTML = '<p>אין מדיה להצגה.</p>'; return; }
                     container.innerHTML = data.map(med => `
                         <div class="card">
                             <h3>${med.title}</h3>
                             ${med.type === 'video' 
-                                ? `<iframe width="100%" height="200" src="${med.url}" frameborder="0" allowfullscreen style="border-radius:8px;"></iframe>`
+                                ? `<video controls width="100%" style="border-radius:8px; max-height:200px;"><source src="${med.url}" type="video/mp4">הדפדפן שלך אינו תומך בוידאו.</video>`
                                 : `<img src="${med.url}" alt="${med.title}" style="width:100%; height:200px; object-fit:cover; border-radius:8px;">`
                             }
                         </div>
@@ -226,17 +191,13 @@
 
         function adminLogin() {
             password = document.getElementById('admin-pass').value;
-            fetch('/api/articles')
-                .then(res => {
-                    if (res.ok) {
-                        document.getElementById('login-box').style.display = 'none';
-                        document.getElementById('admin-content').style.display = 'block';
-                        loadAdminManager();
-                    } else {
-                        alert('שגיאה בחיבור לשרת');
-                    }
-                })
-                .catch(() => alert('שגיאה בחיבור לשרת'));
+            fetch('/api/articles').then(res => {
+                if (res.ok) {
+                    document.getElementById('login-box').style.display = 'none';
+                    document.getElementById('admin-content').style.display = 'block';
+                    loadAdminManager();
+                } else { alert('שגיאה'); }
+            }).catch(() => alert('שגיאה בחיבור לשרת'));
         }
 
         function createArticle() {
@@ -246,34 +207,38 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title, content, password })
-            }).then(res => {
-                if (!res.ok) throw new Error('סיסמה שגויה');
-                return res.json();
-            }).then(() => {
+            }).then(res => { if (!res.ok) throw new Error(); return res.json(); })
+            .then(() => {
                 alert('המאמר נוסף בהצלחה!');
                 document.getElementById('art-title').value = '';
                 document.getElementById('art-content').value = '';
                 loadAdminManager();
-            }).catch(err => alert('סיסמה שגויה או שגיאה בשמירה'));
+            }).catch(() => alert('סיסמה שגויה או שגיאה בשמירה'));
         }
 
-        function createMedia() {
+        function createMediaFile() {
             const type = document.getElementById('med-type').value;
             const title = document.getElementById('med-title').value;
-            const url = document.getElementById('med-url').value;
+            const fileInput = document.getElementById('med-file');
+            
+            if (fileInput.files.length === 0) { alert('נא לבחור קובץ להעלאה'); return; }
+
+            const formData = new FormData();
+            formData.append('mediaFile', fileInput.files[0]);
+            formData.append('title', title);
+            formData.append('type', type);
+            formData.append('password', password);
+
             fetch('/api/media', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type, title, url, password })
-            }).then(res => {
-                if (!res.ok) throw new Error('סיסמה שגויה');
-                return res.json();
-            }).then(() => {
-                alert('המדיה נוספה בהצלחה!');
+                body: formData
+            }).then(res => { if (!res.ok) throw new Error(); return res.json(); })
+            .then(() => {
+                alert('הקובץ הועלה בהצלחה!');
                 document.getElementById('med-title').value = '';
-                document.getElementById('med-url').value = '';
+                fileInput.value = '';
                 loadAdminManager();
-            }).catch(err => alert('סיסמה שגויה או שגיאה בשמירה'));
+            }).catch(() => alert('סיסמה שגויה או שגיאה בהעלאה'));
         }
 
         function removeArticle(id) {
