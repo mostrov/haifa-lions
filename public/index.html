@@ -1,163 +1,308 @@
-<!-- דף ניהול מוגן בסיסמה -->
-<section id="admin" class="content-section" style="display:none;">
-    <h2>פאנל ניהול - אריות חיפה</h2>
-    
-    <!-- מסך כניסה -->
-    <div id="login-box" style="max-width: 400px; margin: 30px auto; background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-        <h3>כניסת מנהל</h3>
-        <p>נא להזין סיסמת ניהול:</p>
-        <input type="password" id="admin-pass-input" placeholder="סיסמה" style="width:100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
-        <button onclick="checkAdminLogin()" style="width:100%; padding: 10px; background: #004080; color: white; border: none; border-radius: 4px; cursor: pointer;">התחבר</button>
-    </div>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אריות חיפה - Haifa Lions Dragon Boat Team</title>
+    <style>
+        :root {
+            --primary-color: #0a2540;
+            --secondary-color: #0077b6;
+            --accent-color: #ff4d4d;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo-container { display: flex; align-items: center; gap: 15px; }
+        .logo-container img { height: 60px; width: auto; object-fit: contain; }
+        .logo-container h1 { font-size: 24px; color: var(--primary-color); font-weight: 800; }
+        
+        nav ul { display: flex; list-style: none; gap: 20px; }
+        nav a { text-decoration: none; color: var(--primary-color); font-weight: 600; cursor: pointer; transition: color 0.2s; }
+        nav a:hover { color: var(--accent-color); }
 
-    <!-- תוכן הניהול (מוצג רק אחרי התחברות מוצלחת) -->
-    <div id="admin-panel-content" style="display:none;">
-        <div style="background: #eef2f7; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-            <h3>הוספת מאמר חדש</h3>
-            <input type="text" id="new-art-title" placeholder="כותרת המאמר" style="width:100%; padding:8px; margin-bottom:10px;">
-            <textarea id="new-art-content" placeholder="תוכן המאמר..." rows="4" style="width:100%; padding:8px; margin-bottom:10px;"></textarea>
-            <button onclick="addNewArticle()" style="background:#28a745; color:white; padding:10px 15px; border:none; border-radius:4px; cursor:pointer;">פרסם מאמר</button>
+        /* Main Content */
+        main { flex: 1; max-width: 1100px; width: 100%; margin: 30px auto; padding: 0 20px; }
+        .content-section { display: none; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .content-section.active { display: block; }
+        
+        h2 { color: var(--primary-color); margin-bottom: 20px; font-size: 28px; border-bottom: 3px solid var(--secondary-color); padding-bottom: 8px; display: inline-block; }
+        p { line-height: 1.8; margin-bottom: 15px; font-size: 17px; }
+
+        /* Grid for Media / Articles */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .card { background: #fff; border: 1px solid #e1e4e8; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .card h3 { color: var(--secondary-color); margin-bottom: 10px; }
+
+        /* Footer */
+        footer {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: auto;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Admin Styles */
+        .admin-box { background: #f1f5f9; padding: 20px; border-radius: 8px; margin-bottom: 25px; }
+        input, textarea, select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+        button.btn { background: var(--secondary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        button.btn:hover { background: #005f9e; }
+        button.btn-danger { background: #dc3545; padding: 5px 10px; font-size: 14px; margin-top: 10px; }
+        button.btn-danger:hover { background: #b02a37; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <img src="logo.png" alt="לוגו אריות חיפה">
+            <h1>אריות חיפה - Haifa Lions</h1>
         </div>
+        <nav>
+            <ul>
+                <li><a onclick="showSection('home')">דף הבית</a></li>
+                <li><a onclick="showSection('articles')">מאמרים</a></li>
+                <li><a onclick="showSection('media')">תמונות וסרטונים</a></li>
+                <li><a onclick="showSection('admin')">דף מנהל</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <div style="background: #eef2f7; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-            <h3>הוספת תמונה / סרטון (קישור מיוטיוב/רשת)</h3>
-            <select id="new-med-type" style="width:100%; padding:8px; margin-bottom:10px;">
-                <option value="video">סרטון (YouTube Embed URL)</option>
-                <option value="image">תמונה (קישור ישיר לתמונה)</option>
-            </select>
-            <input type="text" id="new-med-title" placeholder="כותרת המדיה" style="width:100%; padding:8px; margin-bottom:10px;">
-            <input type="text" id="new-med-url" placeholder="כתובת URL (למשל: https://...)" style="width:100%; padding:8px; margin-bottom:10px;">
-            <button onclick="addNewMedia()" style="background:#28a745; color:white; padding:10px 15px; border:none; border-radius:4px; cursor:pointer;">הוסף מדיה</button>
-        </div>
+    <!-- Main Container -->
+    <main>
+        <!-- דף הבית -->
+        <section id="home" class="content-section active">
+            <h2>על סירות דרקון</h2>
+            <p>ספורט סירות הדרקון (Dragon Boat) הוא אחד מענפי הספורט הקבוצתיים המרתקים, העתיקים והדינמיים ביותר בעולם. מקורו בסין לפני אלפי שנים, והיום הוא ספורט בינלאומי סוחף המשלב עוצמה פיזית אדירה, קצב משותף וחדוות חתירה בלב הים.</p>
+            <p>קבוצת <strong>"אריות חיפה" (Haifa Lions Team)</strong> פועלת במפרץ חיפה ומזמינה אתכם להצטרף אלינו למסע ייחודי המשלב עבודת צוות מושלמת, כושר גופני וחיבור עוצמתי לטבע ולים.</p>
+        </section>
 
-        <div>
-            <h3>ניהול תכנים קיימים ומחיקה</h3>
-            <div id="admin-items-list"></div>
-        </div>
-    </div>
-</section>
+        <!-- דף מאמרים -->
+        <section id="articles" class="content-section">
+            <h2>מאמרים מקצועיים</h2>
+            <div id="articles-container" class="grid">
+                <p>טוען מאמרים...</p>
+            </div>
+        </section>
 
-<script>
-let adminPassword = "";
+        <!-- דף תמונות וסרטונים -->
+        <section id="media" class="content-section">
+            <h2>גלריית תמונות וסרטונים</h2>
+            <div id="media-container" class="grid">
+                <p>טוען מדיה...</p>
+            </div>
+        </section>
 
-function checkAdminLogin() {
-    const passInput = document.getElementById('admin-pass-input').value;
-    // בדיקה ראשונית מול השרת ע"י שליחת בקשת בדיקה או שמירת הסיסמה
-    adminPassword = passInput;
-    
-    // נבצע קריאה לבדיקת תקינות עם הסיסמה
-    fetch('/api/articles')
-        .then(res => res.json())
-        .then(data => {
-            // אם הגענו לכאן השרת זמין, נציג את פאנל הניהול ונטען את הפריטים למחיקה
-            document.getElementById('login-box').style.display = 'none';
-            document.getElementById('admin-panel-content').style.display = 'block';
-            loadAdminItems();
-        })
-        .catch(err => alert('שגיאה בחיבור לשרת'));
-}
+        <!-- דף מנהל -->
+        <section id="admin" class="content-section">
+            <h2>פאנל ניהול אתר</h2>
+            
+            <!-- מסך התחברות -->
+            <div id="login-box" class="admin-box" style="max-width: 400px; margin: 0 auto;">
+                <h3>כניסת מנהל</h3>
+                <p style="font-size:14px; color:#666;">הזן סיסמת ניהול להעלאה ומחיקת תכנים:</p>
+                <input type="password" id="admin-pass" placeholder="סיסמה">
+                <button class="btn" style="width:100%;" onclick="adminLogin()">התחבר</button>
+            </div>
 
-function addNewArticle() {
-    const title = document.getElementById('new-art-title').value;
-    const content = document.getElementById('new-art-content').value;
+            <!-- פאנל הניהול בפועל (מוסתר בהתחלה) -->
+            <div id="admin-content" style="display:none;">
+                <div class="admin-box">
+                    <h3>הוספת מאמר חדש</h3>
+                    <input type="text" id="art-title" placeholder="כותרת המאמר">
+                    <textarea id="art-content" rows="4" placeholder="תוכן המאמר..."></textarea>
+                    <button class="btn" onclick="createArticle()">פרסם מאמר</button>
+                </div>
 
-    fetch('/api/articles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, content, password: adminPassword })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('סיסמה שגויה או שגיאה בנתונים');
-        return res.json();
-    })
-    .then(data => {
-        alert('המאמר נוסף בהצלחה!');
-        document.getElementById('new-art-title').value = '';
-        document.getElementById('new-art-content').value = '';
-        loadAdminItems();
-    })
-    .catch(err => alert(err.message));
-}
+                <div class="admin-box">
+                    <h3>הוספת מדיה (תמונה או סרטון)</h3>
+                    <select id="med-type">
+                        <option value="video">סרטון (קישור הטמעה מיוטיוב)</option>
+                        <option value="image">תמונה (קישור ישיר לתמונה)</option>
+                    </select>
+                    <input type="text" id="med-title" placeholder="כותרת המדיה">
+                    <input type="text" id="med-url" placeholder="כתובת URL">
+                    <button class="btn" onclick="createMedia()">הוסף מדיה</button>
+                </div>
 
-function addNewMedia() {
-    const type = document.getElementById('new-med-type').value;
-    const title = document.getElementById('new-med-title').value;
-    const url = document.getElementById('new-med-url').value;
+                <div class="admin-box">
+                    <h3>ניהול ותוכן קיים</h3>
+                    <div id="admin-list">טוען רשימת תכנים...</div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    fetch('/api/media', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, url, title, password: adminPassword })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('סיסמה שגויה או שגיאה בנתונים');
-        return res.json();
-    })
-    .then(data => {
-        alert('המדיה נוספה בהצלחה!');
-        document.getElementById('new-med-title').value = '';
-        document.getElementById('new-med-url').value = '';
-        loadAdminItems();
-    })
-    .catch(err => alert(err.message));
-}
+    <!-- Footer -->
+    <footer>
+        לתיאום אימון ללא עלות - עמי 054-4257645
+    </footer>
 
-function deleteArticle(id) {
-    if (!confirm('האם אתแนוחה שברצונך למחוק מאמר זה?')) return;
-    
-    fetch(`/api/articles/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: adminPassword })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('שגיאה במחיקה או סיסמה שגויה');
-        return res.json();
-    })
-    .then(() => {
-        alert('המאמר נמחק');
-        loadAdminItems();
-    })
-    .catch(err => alert(err.message));
-}
+    <script>
+        let password = "";
 
-function deleteMedia(id) {
-    if (!confirm('האם את בטוחה שברצונך למחוק פריט מדיה זה?')) return;
-    
-    fetch(`/api/media/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: adminPassword })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('שגיאה במחיקה או סיסמה שגויה');
-        return res.json();
-    })
-    .then(() => {
-        alert('המדיה נמחקה');
-        loadAdminItems();
-    })
-    .catch(err => alert(err.message));
-}
+        // מעבר בין דפים באתר
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            if (sectionId === 'articles') loadArticles();
+            if (sectionId === 'media') loadMedia();
+        }
 
-function loadAdminItems() {
-    const listDiv = document.getElementById('admin-items-list');
-    listDiv.innerHTML = '<p>טוען נתונים...</p>';
+        // טעינת מאמרים לקהל הרחב
+        function loadArticles() {
+            fetch('/api/articles')
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('articles-container');
+                    if (data.length === 0) {
+                        container.innerHTML = '<p>אין מאמרים כרגע.</p>';
+                        return;
+                    }
+                    container.innerHTML = data.map(art => `
+                        <div class="card">
+                            <h3>${art.title}</h3>
+                            <small style="color:#666; display:block; margin-bottom:10px;">${art.date}</small>
+                            <p>${art.content}</p>
+                        </div>
+                    `).join('');
+                });
+        }
 
-    Promise.all([
-        fetch('/api/articles').then(res => res.json()),
-        fetch('/api/media').then(res => res.json())
-    ]).then(([articles, mediaItems]) => {
-        let html = '<h4>מאמרים קיימים:</h4><ul>';
-        articles.forEach(art => {
-            html += `<li style="margin-bottom:8px;">${art.title} <button onclick="deleteArticle(${art.id})" style="background:#dc3545; color:white; border:none; padding:3px 8px; border-radius:3px; cursor:pointer; margin-right:10px;">מחק</button></li>`;
-        });
-        html += '</ul><h4>מדיה קיימת:</h4><ul>';
-        mediaItems.forEach(med => {
-            html += `<li style="margin-bottom:8px;">[${med.type}] ${med.title} <button onclick="deleteMedia(${med.id})" style="background:#dc3545; color:white; border:none; padding:3px 8px; border-radius:3px; cursor:pointer; margin-right:10px;">מחק</button></li>`;
-        });
-        html += '</ul>';
-        listDiv.innerHTML = html;
-    });
-}
-</script>
+        // טעינת מדיה לגלריה
+        function loadMedia() {
+            fetch('/api/media')
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('media-container');
+                    if (data.length === 0) {
+                        container.innerHTML = '<p>אין מדיה להצגה.</p>';
+                        return;
+                    }
+                    container.innerHTML = data.map(med => `
+                        <div class="card">
+                            <h3>${med.title}</h3>
+                            ${med.type === 'video' 
+                                ? `<iframe width="100%" height="180" src="${med.url}" frameborder="0" allowfullscreen></iframe>`
+                                : `<img src="${med.url}" alt="${med.title}" style="width:100%; height:180px; object-fit:cover; border-radius:4px;">`
+                            }
+                        </div>
+                    `).join('');
+                });
+        }
+
+        // התחברות לדף מנהל
+        function adminLogin() {
+            password = document.getElementById('admin-pass').value;
+            fetch('/api/articles')
+                .then(res => {
+                    if (res.ok) {
+                        document.getElementById('login-box').style.display = 'none';
+                        document.getElementById('admin-content').style.display = 'block';
+                        loadAdminManager();
+                    } else {
+                        alert('שגיאה בחיבור לשרת');
+                    }
+                })
+                .catch(() => alert('שגיאה בחיבור לשרת'));
+        }
+
+        // יצירת מאמר חדש
+        function createArticle() {
+            const title = document.getElementById('art-title').value;
+            const content = document.getElementById('art-content').value;
+            fetch('/api/articles', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, content, password })
+            }).then(res => {
+                if (!res.ok) throw new Error('סיסמה שגויה');
+                return res.json();
+            }).then(() => {
+                alert('המאמר נוסף בהצלחה!');
+                document.getElementById('art-title').value = '';
+                document.getElementById('art-content').value = '';
+                loadAdminManager();
+            }).catch(err => alert('סיסמה שגויה או שגיאה בשמירה'));
+        }
+
+        // יצירת מדיה חדשה
+        function createMedia() {
+            const type = document.getElementById('med-type').value;
+            const title = document.getElementById('med-title').value;
+            const url = document.getElementById('med-url').value;
+            fetch('/api/media', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type, title, url, password })
+            }).then(res => {
+                if (!res.ok) throw new Error('סיסמה שגויה');
+                return res.json();
+            }).then(() => {
+                alert('המדיה נוספה בהצלחה!');
+                document.getElementById('med-title').value = '';
+                document.getElementById('med-url').value = '';
+                loadAdminManager();
+            }).catch(err => alert('סיסמה שגויה או שגיאה בשמירה'));
+        }
+
+        // מחיקת מאמר
+        function removeArticle(id) {
+            if (!confirm('האם למחוק מאמר זה?')) return;
+            fetch(`/api/articles/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            }).then(() => loadAdminManager());
+        }
+
+        // מחיקת מדיה
+        function removeMedia(id) {
+            if (!confirm('האם למחוק פריט זה?')) return;
+            fetch(`/api/media/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            }).then(() => loadAdminManager());
+        }
+
+        // טעינת רשימת הניהול והמחיקה בפאנל מנהל
+        function loadAdminManager() {
+            Promise.all([
+                fetch('/api/articles').then(r => r.json()),
+                fetch('/api/media').then(r => r.json())
+            ]).then(([arts, meds]) => {
+                let html = '<h4>מאמרים לניהול:</h4><ul>';
+                arts.forEach(a => {
+                    html += `<li style="margin:8px 0;">${a.title} <button class="btn btn-danger" onclick="removeArticle(${a.id})">מחק</button></li>`;
+                });
+                html += '</ul><h4 style="margin-top:15px;">מדיה לניהול:</h4><ul>';
+                meds.forEach(m => {
+                    html += `<li style="margin:8px 0;">[${m.type}] ${m.title} <button class="btn btn-danger" onclick="removeMedia(${m.id})">מחק</button></li>`;
+                });
+                html += '</ul>';
+                document.getElementById('admin-list').innerHTML = html;
+            });
+        }
+    </script>
+</body>
+</html>
