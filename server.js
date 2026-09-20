@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 const ADMIN_PASSWORD = 'HaifaLionsAreTheBest!123'; // סיסמת הניהול שלך
 
 // חיבור ל-MongoDB Atlas (הדביקי כאן למטה את המחרוזת שהעתקת ממונגובי)
-const MONGO_URI = process.env.MONGO_URI || 'הדביקי_כאן_את_מחרוזת_ההתחברות_שלך';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://michalostrov_db_user:w5Pm89ejbRWNnv#@cluster0.e6fwqze.mongodb.net/?appName=Cluster0';
 
 mongoose.connect(MONGO_URI)
     .then(() => console.log('התחברנו בהצלחה למסד הנתונים בענן!'))
