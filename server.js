@@ -3,104 +3,145 @@ const cors = require('cors');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ADMIN_PASSWORD = 'HaifaLionsAreTheBest!123'; // סיסמת הניהול
+const ADMIN_PASSWORD = 'HaifaLionsAreTheBest!123'; // סיסמת הניהול שלך
+
+// חיבור ל-MongoDB Atlas (הדביקי כאן למטה את המחרוזת שהעתקת ממונגובי)
+const MONGO_URI = process.env.MONGO_URI || 'הדביקי_כאן_את_מחרוזת_ההתחברות_שלך';
+
+mongoose.connect(MONGO_URI)
+    .then(() => console.log('התחברנו בהצלחה למסד הנתונים בענן!'))
+    .catch(err => console.error('שגיאה בחיבור למונגו:', err));
+
+// הגדרת מבנה הנתונים למאמרים במונגו
+const ArticleSchema = new mongoose.Schema({
+    id: Number,
+    title: String,
+    content: String,
+    date: String
+});
+const Article = mongoose.model('Article', ArticleSchema);
+
+// הגדרת מבנה הנתונים למדיה במונגו
+const MediaSchema = new mongoose.Schema({
+    id: Number,
+    type: String,
+    url: String,
+    title: String
+});
+const Media = mongoose.model('Media', MediaSchema);
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// וידוא שתיקיית ההעלאות קיימת
+// וידוא תיקיית העלאות קבצים
 const uploadDir = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// הגדרת אחסון הקבצים בעזרת Multer
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
+    destination: (req, file, cb) => cb(null, uploadDir),
+    filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
 const upload = multer({ storage: storage });
 
-// הגשת קבצי האתר והקבצים שהועלו
 app.use(express.static(path.join(__dirname, 'public')));
 
-let articles = [
-    { 
-        id: 1, 
-        title: 'ברוכים הבאים לאריות חיפה', 
-        content: 'ספורט סירות הדרקון משלב עבודת צוות מופלאה, עוצמה פיזית וחיבור מדהים לים בחיפה.', 
-        date: '2026-09-19' 
+// קבלת כל המאמרים מהענן
+app.get('/api/articles', async (req, res) => {
+    try {
+        const articles = await Article.find();
+        res.json(articles);
+    } catch (err) {
+        res.status(500).json({ error: 'שגיאה בטעינת מאמרים' });
     }
-];
+});
 
-let media = [];
-
-// קבלת מאמרים ומדיה
-app.get('/api/articles', (req, res) => res.json(articles));
-app.get('/api/media', (req, res) => res.json(media));
-
-// הוספת מאמר (עם סיסמה)
-app.post('/api/articles', (req, res) => {
+// הוספת מאמר חדש לענן
+app.post('/api/articles', async (req, res) => {
     const { title, content, password } = req.body;
     if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
     if (!title || !content) return res.status(400).json({ error: 'חסרים נתונים' });
     
-    const newArticle = {
-        id: Date.now(),
-        title,
-        content,
-        date: new Date().toISOString().split('T')[0]
-    };
-    articles.push(newArticle);
-    res.status(201).json(newArticle);
+    try {
+        const newArticle = new Article({
+            id: Date.now(),
+            title,
+            content,
+            date: new Date().toISOString().split('T')[0]
+        });
+        await newArticle.save();
+        res.status(201).json(newArticle);
+    } catch (err) {
+        res.status(500).json({ error: 'שגיאה בשמירת המאמר' });
+    }
 });
 
-// מחיקת מאמר
-app.delete('/api/articles/:id', (req, res) => {
+// מחיקת מאמר מהענן
+app.delete('/api/articles/:id', async (req, res) => {
     const { password } = req.body;
     if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
-    articles = articles.filter(a => a.id !== Number(req.params.id));
-    res.json({ message: 'נמחק בהצלחה' });
+    
+    try {
+        await Article.findOneAndDelete({ id: Number(req.params.id) });
+        res.json({ message: 'נמחק בהצלחה' });
+    } catch (err) {
+        res.status(500).json({ error: 'שגיאה במחיקה' });
+    }
 });
 
-// העלאת קובץ מדיה אמיתי (תמונה או סרטון) עם סיסמה
-app.post('/api/media', upload.single('mediaFile'), (req, res) => {
+// קבלת כל המדיה מהענן
+app.get('/api/media', async (req, res) => {
+    try {
+        const mediaItems = await Media.find();
+        res.json(mediaItems);
+    } catch (err) {
+        res.status(500).json({ error: 'שגיאה בטעינת מדיה' });
+    }
+});
+
+// העלאת קובץ ושמירתו בענן
+app.post('/api/media', upload.single('mediaFile'), async (req, res) => {
     const { title, password, type } = req.body;
     if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
     if (!req.file) return res.status(400).json({ error: 'לא נבחר קובץ' });
 
-    const fileUrl = `/uploads/${req.file.filename}`;
-    const newItem = {
-        id: Date.now(),
-        type: type || 'image', // image או video
-        url: fileUrl,
-        title: title || 'ללא כותרת'
-    };
-    media.push(newItem);
-    res.status(201).json(newItem);
+    try {
+        const fileUrl = `/uploads/${req.file.filename}`;
+        const newItem = new Media({
+            id: Date.now(),
+            type: type || 'image',
+            url: fileUrl,
+            title: title || 'ללא כותרת'
+        });
+        await newItem.save();
+        res.status(201).json(newItem);
+    } catch (err) {
+        res.status(500).json({ error: 'שגיאה בשמירת המדיה' });
+    }
 });
 
 // מחיקת מדיה
-app.delete('/api/media/:id', (req, res) => {
+app.delete('/api/media/:id', async (req, res) => {
     const { password } = req.body;
     if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
     
-    const item = media.find(m => m.id === Number(req.params.id));
-    if (item && item.url.startsWith('/uploads/')) {
-        const filePath = path.join(__dirname, 'public', item.url);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    try {
+        const item = await Media.findOne({ id: Number(req.params.id) });
+        if (item && item.url.startsWith('/uploads/')) {
+            const filePath = path.join(__dirname, 'public', item.url);
+            if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        }
+        await Media.findOneAndDelete({ id: Number(req.params.id) });
+        res.json({ message: 'נמחק בהצלחה' });
+    } catch (err) {
+        res.status(500).json({ error: 'שגיאה במחיקה' });
     }
-    
-    media = media.filter(m => m.id !== Number(req.params.id));
-    res.json({ message: 'נמחק בהצלחה' });
 });
 
 app.listen(PORT, () => {
