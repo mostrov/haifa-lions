@@ -79,6 +79,25 @@
         button.btn-danger:hover { background: #dc2626; }
         
         .login-card { max-width: 450px; margin: 40px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); text-align: center; }
+
+        .video-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* שומר על יחס תצוגה 16:9 מושלם */
+        height: 0;
+        overflow: hidden;
+        border-radius: 8px;
+        background: #000;
+        margin-top: 10px;
+    }
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
     </style>
 </head>
 <body>
