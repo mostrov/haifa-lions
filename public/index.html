@@ -196,22 +196,33 @@
                 });
         }
 
-        function loadMedia() {
+       function loadMedia() {
             fetch('/api/media')
                 .then(res => res.json())
                 .then(data => {
                     const container = document.getElementById('media-container');
                     if (data.length === 0) { container.innerHTML = '<p>אין מדיה להצגה.</p>'; return; }
-                    container.innerHTML = data.map(med => `
-                        <div class="card">
-                            <h3>${med.title}</h3>
-                            ${med.type === 'video' 
-                                ? `<video controls width="100%" style="border-radius:8px; max-height:200px;"><source src="${med.url}" type="video/mp4">הדפדפן שלך אינו תומך בוידאו.</video>`
-                                : `<img src="${med.url}" alt="${med.title}" onclick="openImageModal('${med.url}', '${escapeHtml(med.title)}')">`
-                            }
-                            <small style="color: #64748b; display: block; margin-top: 8px; text-align: center; font-size: 13px;">לחץ על התמונה להגדלה</small>
-                        </div>
-                    `).join('');
+                    container.innerHTML = data.map(med => {
+                        let mediaContent = '';
+                        
+                        if (med.type === 'video') {
+                            mediaContent = `<video controls width="100%" style="border-radius:8px; max-height:200px;"><source src="${med.url}" type="video/mp4">הדפדפן שלך אינו תומך בוידאו.</video>`;
+                        } else if (med.type === 'youtube' || med.url.includes('youtube') || med.url.includes('embed')) {
+                            mediaContent = `<iframe width="100%" height="200" src="${med.url}" style="border-radius:8px; border:none;" allowfullscreen></iframe>`;
+                        } else if (med.type === 'pdf') {
+                            mediaContent = `<div style="text-align:center; padding:20px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1;"><p style="margin-bottom:10px; font-weight:bold;">מסמך PDF</p><a href="${med.url}" target="_blank" class="btn" style="display:inline-block; text-decoration:none;">צפה או הורד PDF</a></div>`;
+                        } else {
+                            mediaContent = `<img src="${med.url}" alt="${med.title}" onclick="openImageModal('${med.url}', '${escapeHtml(med.title)}')">`;
+                        }
+
+                        return `
+                            <div class="card">
+                                <h3>${med.title}</h3>
+                                ${mediaContent}
+                                ${med.type !== 'youtube' && !med.url.includes('youtube') && !med.url.includes('embed') && med.type !== 'pdf' && med.type !== 'video' ? '<small style="color: #64748b; display: block; margin-top: 8px; text-align: center; font-size: 13px;">לחץ על התמונה להגדלה</small>' : ''}
+                            </div>
+                        `;
+                    }).join('');
                 });
         }
         
