@@ -208,7 +208,8 @@
                         if (med.type === 'video') {
                             mediaContent = `<video controls width="100%" style="border-radius:8px; max-height:200px;"><source src="${med.url}" type="video/mp4">הדפדפן שלך אינו תומך בוידאו.</video>`;
                         } else if (med.type === 'youtube' || med.url.includes('youtube') || med.url.includes('embed')) {
-                            mediaContent = `<iframe width="100%" height="200" src="${med.url}" style="border-radius:8px; border:none;" allowfullscreen></iframe>`;
+                           // mediaContent = `<iframe width="100%" height="200" src="${med.url}" style="border-radius:8px; border:none;" allowfullscreen></iframe>`;
+                             mediaContent = '"${med.url}"';
                         } else if (med.type === 'pdf') {
                             mediaContent = `<div style="text-align:center; padding:20px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1;"><p style="margin-bottom:10px; font-weight:bold;">מסמך PDF</p><a href="${med.url}" target="_blank" class="btn" style="display:inline-block; text-decoration:none;">צפה או הורד PDF</a></div>`;
                         } else {
