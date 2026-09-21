@@ -9,11 +9,13 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const MONGO_URI = process.env.MONGO_URI;
+
 if (!ADMIN_PASSWORD || !MONGO_URI) {
     console.error('שגיאה: חסרים משתני סביבה חיוניים (ADMIN_PASSWORD או MONGO_URI)');
 }
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI)
     .then(() => console.log('התחברנו בהצלחה למסד הנתונים בענן!'))
