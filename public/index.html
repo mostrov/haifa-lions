@@ -134,16 +134,18 @@
                 </div>
 
                 <div class="admin-box">
-                    <h3>העלאת קובץ מדיה (תמונה או וידאו מהמחשב)</h3>
-                    <select id="med-type">
-                        <option value="image">תמונה</option>
-                        <option value="video">סרטון</option>
-                    </select>
-                    <input type="text" id="med-title" placeholder="כותרת המדיה">
-                    <input type="file" id="med-file">
-                    <button class="btn" onclick="createMediaFile()">העלה קובץ לאתר</button>
-                </div>
-
+    <h3>הוספת מדיה (קובץ מהמחשב או קישור חיצוני ליוטיוב)</h3>
+    <select id="med-type">
+        <option value="image">תמונה (כולל JFIF)</option>
+        <option value="video">סרטון וידאו</option>
+        <option value="pdf">קובץ PDF</option>
+        <option value="youtube">קישור יוטיוב</option>
+    </select>
+    <input type="text" id="med-title" placeholder="כותרת המדיה">
+    <input type="file" id="med-file" placeholder="בחר קובץ מהמחשב">
+    <input type="text" id="med-external-url" placeholder="או הדבק כאן קישור חיצוני ליוטיוב (embed)">
+    <button class="btn" onclick="createMediaFile()">העלה קובץ / הוסף קישור</button>
+</div>
                 <div class="admin-box">
                     <h3>ניהול ותוכן קיים (מחיקת פריטים)</h3>
                     <div id="admin-list">טוען רשימת תכנים...</div>
