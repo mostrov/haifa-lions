@@ -246,30 +246,41 @@
             }).catch(() => alert('סיסמה שגויה או שגיאה בשמירה'));
         }
 
-        function createMediaFile() {
-            const type = document.getElementById('med-type').value;
-            const title = document.getElementById('med-title').value;
-            const fileInput = document.getElementById('med-file');
-            
-            if (fileInput.files.length === 0) { alert('נא לבחור קובץ להעלאה'); return; }
+function createMediaFile() {
+    const type = document.getElementById('med-type').value;
+    const title = document.getElementById('med-title').value;
+    const fileInput = document.getElementById('med-file');
+    const externalUrl = document.getElementById('med-external-url').value;
 
-            const formData = new FormData();
-            formData.append('mediaFile', fileInput.files[0]);
-            formData.append('title', title);
-            formData.append('type', type);
-            formData.append('password', password);
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('type', type);
+    formData.append('password', password);
 
-            fetch('/api/media', {
-                method: 'POST',
-                body: formData
-            }).then(res => { if (!res.ok) throw new Error(); return res.json(); })
-            .then(() => {
-                alert('הקובץ הועלה בהצלחה!');
-                document.getElementById('med-title').value = '';
-                fileInput.value = '';
-                loadAdminManager();
-            }).catch(() => alert('סיסמה שגויה או שגיאה בהעלאה'));
-        }
+    if (fileInput.files.length > 0) {
+        formData.append('mediaFile', fileInput.files[0]);
+    } else if (externalUrl) {
+        formData.append('externalUrl', externalUrl);
+    } else {
+        alert('נא לבחור קובץ להעלאה או להזין קישור חיצוני');
+        return;
+    }
+
+    fetch('/api/media', {
+        method: 'POST',
+        body: formData
+    }).then(res => {
+        if (!res.ok) return res.json().then(err => { throw new Error(err.error); });
+        return res.json();
+    })
+    .then(() => {
+        alert('הפריט נוסף בהצלחה!');
+        document.getElementById('med-title').value = '';
+        document.getElementById('med-external-url').value = '';
+        fileInput.value = '';
+        loadAdminManager();
+    }).catch(err => alert(err.message || 'שגיאה בהוספת הפריט'));
+}
 
         function removeArticle(id) {
             if (!confirm('האם למחוק מאמר זה?')) return;
