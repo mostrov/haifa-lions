@@ -103,7 +103,16 @@ app.post('/api/media', (req, res) => {
             else if (req.file.mimetype && req.file.mimetype.startsWith('video/')) mediaType = 'video';
             else mediaType = 'image';
         } else if (externalUrl) {
-            fileUrl = externalUrl;
+            let finalUrl = externalUrl;
+            // המרה אוטומטית של קישור יוטיוב רגיל לקישור Embed תקין
+            if (externalUrl.includes('watch?v=')) {
+                const videoId = externalUrl.split('watch?v=')[1].split('&')[0];
+                finalUrl = `https://www.youtube.com/embed/${videoId}`;
+            } else if (externalUrl.includes('youtu.be/')) {
+                const videoId = externalUrl.split('youtu.be/')[1].split('?')[0];
+                finalUrl = `https://www.youtube.com/embed/${videoId}`;
+            }  
+            fileUrl = finalUrl;
             mediaType = 'youtube';
         } else {
             return res.status(400).json({ error: 'יש לבחור קובץ להעלאה או להזין קישור חיצוני' });
