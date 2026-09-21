@@ -208,7 +208,8 @@
                         if (med.type === 'video') {
                             mediaContent = `<video controls width="100%" style="border-radius:8px; max-height:200px;"><source src="${med.url}" type="video/mp4">הדפדפן שלך אינו תומך בוידאו.</video>`;
                         } else if (med.type === 'youtube') {
-                           mediaContent = `"${med.url}"`;
+                            // יצירת ה-iframe בדיוק פעם אחת בתוך מעטפת מעוצבת
+                            mediaContent = `<div class="video-container"><iframe src="${med.url}" allowfullscreen></iframe></div>`;
                         } else if (med.type === 'pdf') {
                             mediaContent = `<div style="text-align:center; padding:20px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1;"><p style="margin-bottom:10px; font-weight:bold;">מסמך PDF</p><a href="${med.url}" target="_blank" class="btn" style="display:inline-block; text-decoration:none;">צפה או הורד PDF</a></div>`;
                         } else {
@@ -219,7 +220,7 @@
                             <div class="card">
                                 <h3>${med.title}</h3>
                                 ${mediaContent}
-                                ${med.type !== 'youtube' && !med.url.includes('youtube') && !med.url.includes('embed') && med.type !== 'pdf' && med.type !== 'video' ? '<small style="color: #64748b; display: block; margin-top: 8px; text-align: center; font-size: 13px;">לחץ על התמונה להגדלה</small>' : ''}
+                                ${med.type !== 'youtube' && med.type !== 'pdf' && med.type !== 'video' ? '<small style="color: #64748b; display: block; margin-top: 8px; text-align: center; font-size: 13px;">לחץ על התמונה להגדלה</small>' : ''}
                             </div>
                         `;
                     }).join('');
