@@ -40,7 +40,8 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: {
+    params: async (req, file)
+     {
         folder: 'haifa_lions_media',
         resource_type: 'auto'
         // הסרנו את allowed_formats כדי שקלאודינרי לא יחסום קבצי Word חדשים
