@@ -40,11 +40,13 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: async (req, file)
-     {
-        folder: 'haifa_lions_media',
-        resource_type: 'auto'
-        // הסרנו את allowed_formats כדי שקלאודינרי לא יחסום קבצי Word חדשים
+    params: async (req, file) => {
+        return {
+            folder: 'haifa_lions_media',
+            resource_type: 'auto',
+            // השורה הזו לוקחת את הסיומת המקורית (כמו docx) ושומרת אותה בקלאודינרי
+            format: file.originalname.split('.').pop() 
+        };
     }
 });
 
