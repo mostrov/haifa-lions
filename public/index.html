@@ -216,12 +216,13 @@
                             parsedContent = { text: art.content, pdfUrl: '' };
                         }
 
-                        let pdfButton = '';
-                        if (parsedContent.pdfUrl) {
-                            pdfButton = `
+                        // בתוך loadArticles ו-openArticleModal, במקום בדיקת pdfUrl נבדוק docUrl:
+                        let docButton = '';
+                        if (parsedContent.docUrl) {
+                            docButton = `
                                 <div style="margin-top: 15px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center;">
-                                    <p style="margin-bottom: 10px; font-size: 15px; color: var(--primary); font-weight: bold;">📄 מסמך PDF מצורף למאמר</p>
-                                    <a href="${parsedContent.pdfUrl}" target="_blank" class="btn" style="text-decoration: none; display: inline-block; font-size: 15px; padding: 10px 20px;">📥 צפה / הורד מסמך PDF</a>
+                                    <p style="margin-bottom: 10px; font-size: 15px; color: var(--primary); font-weight: bold;">📄 מסמך Word מצורף למאמר</p>
+                                    <a href="${parsedContent.docUrl}" target="_blank" class="btn" style="text-decoration: none; display: inline-block; font-size: 15px; padding: 10px 20px;">📥 הורד מסמך Word</a>
                                 </div>
                             `;
                         }
