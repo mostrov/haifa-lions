@@ -323,18 +323,18 @@
             }).catch(() => alert('שגיאה בחיבור לשרת'));
         }
 
-        function createArticle() {
+       function createArticle() {
             const title = document.getElementById('art-title').value;
             const content = document.getElementById('art-content').value;
-            const pdfFileInput = document.getElementById('art-pdf-file');
+            const docFileInput = document.getElementById('art-doc-file');
 
             const formData = new FormData();
             formData.append('title', title);
             formData.append('content', content);
             formData.append('password', password);
 
-            if (pdfFileInput.files.length > 0) {
-                formData.append('pdfFile', pdfFileInput.files[0]);
+            if (docFileInput.files.length > 0) {
+                formData.append('docFile', docFileInput.files[0]);
             }
 
             fetch('/api/articles', {
@@ -348,7 +348,7 @@
                 alert('המאמר / המסמך נוסף בהצלחה!');
                 document.getElementById('art-title').value = '';
                 document.getElementById('art-content').value = '';
-                pdfFileInput.value = '';
+                docFileInput.value = '';
                 loadAdminManager();
                 loadArticles();
             }).catch(err => alert(err.message || 'סיסמה שגויה או שגיאה בשמירה'));
