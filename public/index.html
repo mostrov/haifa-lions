@@ -155,9 +155,8 @@
                 <div class="admin-box">
     <h3>הוספת מדיה (קובץ מהמחשב או קישור חיצוני ליוטיוב)</h3>
     <select id="med-type">
-        <option value="image">תמונה (כולל JFIF)</option>
+        <option value="image">תמונה</option>
         <option value="video">סרטון וידאו</option>
-        <option value="pdf">קובץ PDF</option>
         <option value="youtube">קישור יוטיוב</option>
     </select>
     <input type="text" id="med-title" placeholder="כותרת המדיה">
@@ -229,8 +228,6 @@
                         } else if (med.type === 'youtube') {
                             // יצירת ה-iframe בדיוק פעם אחת בתוך מעטפת מעוצבת
                             mediaContent = `<div class="video-container"><iframe src="${med.url}" allowfullscreen></iframe></div>`;
-                        } else if (med.type === 'pdf') {
-                            mediaContent = `<div style="text-align:center; padding:20px; background:#f8fafc; border-radius:8px; border:1px dashed #cbd5e1;"><p style="margin-bottom:10px; font-weight:bold;">מסמך PDF</p><a href="${med.url}" target="_blank" class="btn" style="display:inline-block; text-decoration:none;">צפה או הורד PDF</a></div>`;
                         } else {
                             mediaContent = `<img src="${med.url}" alt="${med.title}" onclick="openImageModal('${med.url}', '${escapeHtml(med.title)}')">`;
                         }
