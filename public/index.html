@@ -264,17 +264,32 @@
         function createArticle() {
             const title = document.getElementById('art-title').value;
             const content = document.getElementById('art-content').value;
+            const pdfFileInput = document.getElementById('art-pdf-file');
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('content', content);
+            formData.append('password', password);
+
+            if (pdfFileInput.files.length > 0) {
+                formData.append('pdfFile', pdfFileInput.files[0]);
+            }
+
             fetch('/api/articles', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, content, password })
-            }).then(res => { if (!res.ok) throw new Error(); return res.json(); })
+                body: formData
+            }).then(res => { 
+                if (!res.ok) return res.json().then(err => { throw new Error(err.error); }); 
+                return res.json(); 
+            })
             .then(() => {
-                alert('המאמר נוסף בהצלחה!');
+                alert('המאמר / המסמך נוסף בהצלחה!');
                 document.getElementById('art-title').value = '';
                 document.getElementById('art-content').value = '';
+                pdfFileInput.value = '';
                 loadAdminManager();
-            }).catch(() => alert('סיסמה שגויה או שגיאה בשמירה'));
+                loadArticles();
+            }).catch(err => alert(err.message || 'סיסמה שגויה או שגיאה בשמירה'));
         }
 
 function createMediaFile() {
