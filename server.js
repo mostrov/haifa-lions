@@ -59,16 +59,38 @@ app.get('/api/articles', async (req, res) => {
     catch (err) { res.status(500).json({ error: 'שגיאה בטעינת מאמרים' }); }
 });
 
-app.post('/api/articles', async (req, res) => {
-    const { title, content, password } = req.body;
-    if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
-    if (!title || !content) return res.status(400).json({ error: 'חסרים נתונים' });
-    
-    try {
-        const newArticle = new Article({ id: Date.now(), title, content, date: new Date().toISOString().split('T')[0] });
-        await newArticle.save();
-        res.status(201).json(newArticle);
-    } catch (err) { res.status(500).json({ error: 'שגיאה בשמירת המאמר' }); }
+app.post('/api/articles', (req, res) => {
+    upload.single('pdfFile')(req, res, async function (err) {
+        if (err) return res.status(400).json({ error: 'שגיאה בהעלאת קובץ ה-PDF.' });
+
+        const { title, content, password } = req.body;
+        if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
+
+        try {
+            let finalContent = content || '';
+            
+            // אם הועלה קובץ PDF, ניקח את הקישור שלו מהענן ונוסיף כפתור צפייה
+            if (req.file) {
+                const pdfUrl = req.file.path;
+                const docTitle = title || req.file.originalname || 'מסמך PDF';
+                finalContent += `<br><br><a href="${pdfUrl}" target="_blank" class="btn" style="display:inline-block; text-decoration:none; margin-top:10px;">📄 צפה או הורד מסמך PDF</a>`;
+            }
+
+            if (!title && !req.file) return res.status(400).json({ error: 'יש להזין כותרת או להעלות קובץ PDF' });
+
+            const newArticle = new Article({ 
+                id: Date.now(), 
+                title: title || (req.file ? req.file.originalname : 'ללא כותרת'), 
+                content: finalContent, 
+                date: new Date().toISOString().split('T')[0] 
+            });
+            
+            await newArticle.save();
+            res.status(201).json(newArticle);
+        } catch (dbErr) { 
+            res.status(500).json({ error: 'שגיאה בשמירת המאמר' }); 
+        }
+    });
 });
 
 app.delete('/api/articles/:id', async (req, res) => {
