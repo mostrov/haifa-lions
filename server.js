@@ -50,13 +50,12 @@ const storage = new CloudinaryStorage({
     }
 });
 
-
 const upload = multer({ 
     storage: storage,
     limits: { fileSize: 50 * 1024 * 1024 }
 });
 
-// --- ניהול מאמרים וקבצי PDF ---
+// --- ניהול מאמרים ומסמכי Word ---
 app.get('/api/articles', async (req, res) => {
     try { res.json(await Article.find()); } 
     catch (err) { res.status(500).json({ error: 'שגיאה בטעינת מאמרים' }); }
@@ -64,7 +63,10 @@ app.get('/api/articles', async (req, res) => {
 
 app.post('/api/articles', (req, res) => {
     upload.single('docFile')(req, res, async function (err) {
-        if (err) return res.status(400).json({ error: 'שגיאה בהעלאת קובץ ה-Word.' });
+        if (err) {
+            console.error('Multer Upload Error:', err);
+            return res.status(400).json({ error: 'שגיאה בהעלאת קובץ ה-Word.' });
+        }
 
         const { title, content, password } = req.body;
         if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
@@ -78,13 +80,14 @@ app.post('/api/articles', (req, res) => {
             const newArticle = new Article({ 
                 id: Date.now(), 
                 title: title || (req.file ? req.file.originalname : 'ללא כותרת'), 
-                content: JSON.stringify({ text: content || '', docUrl: docUrl }),
+                content: JSON.stringify({ text: finalContent, docUrl: docUrl }),
                 date: new Date().toISOString().split('T')[0] 
             });
 
             await newArticle.save();
             res.status(201).json(newArticle);
         } catch (dbErr) { 
+            console.error('DB Save Error:', dbErr);
             res.status(500).json({ error: 'שגיאה בשמירת המאמר' }); 
         }
     });
