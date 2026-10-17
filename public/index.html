@@ -347,20 +347,38 @@ function createMediaFile() {
         }
 
         function loadAdminManager() {
+            const listContainer = document.getElementById('admin-list');
+            listContainer.innerHTML = 'טוען רשימת תכנים...';
+
             Promise.all([
-                fetch('/api/articles').then(r => r.json()),
-                fetch('/api/media').then(r => r.json())
+                fetch('/api/articles').then(r => r.json()).catch(() => []),
+                fetch('/api/media').then(r => r.json()).catch(() => [])
             ]).then(([arts, meds]) => {
-                let html = '<h4 style="color:var(--primary); margin-bottom:10px;">מאמרים קיימים:</h4><ul style="list-style:none;">';
-                arts.forEach(a => {
-                    html += `<li style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; margin-bottom:8px; border-radius:6px; border:1px solid #e2e8f0;"><span>${a.title}</span> <button class="btn btn-danger" onclick="removeArticle(${a.id})">מחק</button></li>`;
-                });
-                html += '</ul><h4 style="color:var(--primary); margin:20px 0 10px 0;">מדיה קיימת:</h4><ul style="list-style:none;">';
-                meds.forEach(m => {
-                    html += `<li style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; margin-bottom:8px; border-radius:6px; border:1px solid #e2e8f0;"><span>[${m.type}] ${m.title}</span> <button class="btn btn-danger" onclick="removeMedia(${m.id})">מחק</button></li>`;
-                });
+                let html = '<h4 style="color:var(--primary); margin-bottom:10px;">מאמרים ומסמכי PDF קיימים:</h4><ul style="list-style:none;">';
+                
+                if (!Array.isArray(arts) || arts.length === 0) {
+                    html += '<li style="padding:10px; color:#64748b;">אין מאמרים כרגע.</li>';
+                } else {
+                    arts.forEach(a => {
+                        html += `<li style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; margin-bottom:8px; border-radius:6px; border:1px solid #e2e8f0;"><span>${a.title}</span> <button class="btn btn-danger" onclick="removeArticle(${a.id})">מחק</button></li>`;
+                    });
+                }
+
+                html += '</ul><h4 style="color:var(--primary); margin:20px 0 10px 0;">מדיה קיימת (תמונות, סרטונים ויוטיוב):</h4><ul style="list-style:none;">';
+                
+                if (!Array.isArray(meds) || meds.length === 0) {
+                    html += '<li style="padding:10px; color:#64748b;">אין מדיה להצגה.</li>';
+                } else {
+                    meds.forEach(m => {
+                        html += `<li style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; margin-bottom:8px; border-radius:6px; border:1px solid #e2e8f0;"><span>[${m.type}] ${m.title}</span> <button class="btn btn-danger" onclick="removeMedia(${m.id})">מחק</button></li>`;
+                    });
+                }
+
                 html += '</ul>';
-                document.getElementById('admin-list').innerHTML = html;
+                listContainer.innerHTML = html;
+            }).catch(err => {
+                console.error("שגיאה בטעינת נתוני הניהול:", err);
+                listContainer.innerHTML = '<p style="color:red;">שגיאה בטעינת הנתונים מהשרת.</p>';
             });
         }
 
