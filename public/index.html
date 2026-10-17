@@ -349,11 +349,24 @@ function createMediaFile() {
         function loadAdminManager() {
             const listContainer = document.getElementById('admin-list');
             listContainer.innerHTML = 'טוען רשימת תכנים...';
+            console.log('מתחיל טעינת נתונים לדף הניהול...');
 
             Promise.all([
-                fetch('/api/articles').then(r => r.json()).catch(() => []),
-                fetch('/api/media').then(r => r.json()).catch(() => [])
+                fetch('/api/articles')
+                    .then(r => {
+                        console.log('תשובה התקבלה מ-/api/articles, סטטוס:', r.status);
+                        if (!r.ok) throw new Error('שגיאה בטעינת מאמרים');
+                        return r.json();
+                    }),
+                fetch('/api/media')
+                    .then(r => {
+                        console.log('תשובה התקבלה מ-/api/media, סטטוס:', r.status);
+                        if (!r.ok) throw new Error('שגיאה בטעינת מדיה');
+                        return r.json();
+                    })
             ]).then(([arts, meds]) => {
+                console.log('הנתונים התקבלו בהצלחה:', { arts, meds });
+                
                 let html = '<h4 style="color:var(--primary); margin-bottom:10px;">מאמרים ומסמכי PDF קיימים:</h4><ul style="list-style:none;">';
                 
                 if (!Array.isArray(arts) || arts.length === 0) {
@@ -377,8 +390,9 @@ function createMediaFile() {
                 html += '</ul>';
                 listContainer.innerHTML = html;
             }).catch(err => {
-                console.error("שגיאה בטעינת נתוני הניהול:", err);
-                listContainer.innerHTML = '<p style="color:red;">שגיאה בטעינת הנתונים מהשרת.</p>';
+                console.error("שגיאה קריטית בטעינת נתוני הניהול:", err);
+                listContainer.innerHTML = `<p style="color:red;">שגיאה בטעינת הנתונים מהשרת: ${err.message}</p>`;
+                alert('שגיאה בהתחברות לשרת: ' + err.message);
             });
         }
 
