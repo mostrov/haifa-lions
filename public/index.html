@@ -251,9 +251,16 @@
 
             let docView = '';
             if (parsedContent.docUrl) {
+                // המרת הקישור כדי שיתאים לשירות התצוגה של מיקרוסופט
+                const encodedUrl = encodeURIComponent(parsedContent.docUrl);
+                const viewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
+
                 docView = `
                     <div style="margin-top: 25px; background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center;">
-                        <p style="margin-bottom: 15px; font-size: 16px; color: var(--primary); font-weight: bold;">מסמך Word מצורף:</p>
+                        <p style="margin-bottom: 15px; font-size: 16px; color: var(--primary); font-weight: bold;">תצוגה מקדימה של המסמך:</p>
+                        
+                        <iframe src="${viewerUrl}" width="100%" height="500px" frameborder="0" style="border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 20px; background: #fff;"></iframe>
+                        
                         <a href="${parsedContent.docUrl}" target="_blank" class="btn" style="text-decoration: none; display: inline-block; font-size: 16px; padding: 12px 25px;">📥 הורד מסמך Word</a>
                     </div>
                 `;
