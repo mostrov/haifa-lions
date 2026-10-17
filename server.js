@@ -107,6 +107,18 @@ app.post('/api/articles', (req, res) => {
     });
 });
 
+app.delete('/api/articles/:id', async (req, res) => {
+    const { password } = req.body;
+    if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
+
+    try {
+        await Article.findOneAndDelete({ id: req.params.id });
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'שגיאה במחיקת המאמר' });
+    }
+});
+
 // --- ניהול מדיה (תמונות, סרטונים ויוטיוב) ---
 app.get('/api/media', async (req, res) => {
     try { res.json(await Media.find()); } 
