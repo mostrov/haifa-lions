@@ -237,6 +237,38 @@
                     }).join('');
                 });
         }
+
+        function openArticleModal(id) {
+            const art = currentArticles.find(a => a.id === id);
+            if (!art) return;
+            
+            let parsedContent = { text: art.content, pdfUrl: '' };
+            try {
+                parsedContent = JSON.parse(art.content);
+            } catch (e) {
+                parsedContent = { text: art.content, pdfUrl: '' };
+            }
+
+            let pdfView = '';
+            if (parsedContent.pdfUrl) {
+                pdfView = `
+                    <div style="margin-top: 25px; background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center;">
+                        <p style="margin-bottom: 15px; font-size: 16px; color: var(--primary); font-weight: bold;">מסמך PDF רשמי:</p>
+                        <a href="${parsedContent.pdfUrl}" target="_blank" class="btn" style="text-decoration: none; display: inline-block; font-size: 16px; padding: 12px 25px;">📄 פתח מסמך PDF בחלון חדש / הורד</a>
+                    </div>
+                `;
+            }
+
+            const modal = document.getElementById('viewModal');
+            const body = document.getElementById('modal-content-body');
+            body.innerHTML = `
+                <h2 style="margin-bottom:10px; border:none; padding:0;">${art.title}</h2>
+                <small style="color:#64748b; display:block; margin-bottom:20px;">${art.date}</small>
+                <p style="font-size:18px; line-height:1.8; color:#333; white-space: pre-line;">${parsedContent.text}</p>
+                ${pdfView}
+            `;
+            modal.style.display = 'flex';
+        }
         
         function loadMedia() {
             fetch('/api/media')
