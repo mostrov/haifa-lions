@@ -324,7 +324,7 @@
             }).catch(() => alert('שגיאה בחיבור לשרת'));
         }
 
-       function createArticle() {
+      function createArticle() {
             const title = document.getElementById('art-title').value;
             const content = document.getElementById('art-content').value;
             const docFileInput = document.getElementById('art-doc-file');
@@ -335,7 +335,7 @@
             formData.append('password', password);
 
             if (docFileInput.files.length > 0) {
-                formData.append('docFile', docFileInput.files[0]);
+                formData.append('docFile', docFileInput.files[0]); // שורת השליחה חייבת להיות docFile
             }
 
             fetch('/api/articles', {
@@ -354,7 +354,7 @@
                 loadArticles();
             }).catch(err => alert(err.message || 'סיסמה שגויה או שגיאה בשמירה'));
         }
-
+        
         function createMediaFile() {
             const type = document.getElementById('med-type').value;
             const title = document.getElementById('med-title').value;
