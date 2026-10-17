@@ -81,23 +81,23 @@
         .login-card { max-width: 450px; margin: 40px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); text-align: center; }
 
         .video-container {
-        position: relative;
-        width: 100%;
-        padding-bottom: 56.25%; /* שומר על יחס תצוגה 16:9 מושלם */
-        height: 0;
-        overflow: hidden;
-        border-radius: 8px;
-        background: #000;
-        margin-top: 10px;
-    }
-    .video-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #000;
+            margin-top: 10px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -144,29 +144,31 @@
                 <button class="btn" style="width:100%;" onclick="adminLogin()">התחבר למערכת</button>
             </div>
 
-            <div class="admin-box">
+            <div id="admin-content" style="display: none;">
+                <div class="admin-box">
                     <h3>הוספת מאמר חדש (או העלאת מסמך PDF)</h3>
                     <input type="text" id="art-title" placeholder="כותרת המאמר או המסמך">
                     <textarea id="art-content" rows="4" placeholder="תוכן המאמר (לא חובה אם מעלים קובץ PDF)..."></textarea>
                     
-                    <label style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary);">או העלה קובץ PDF ישירות למאמרים:</label>
+                    <label for="art-pdf-file" style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary);">או העלה קובץ PDF ישירות למאמרים:</label>
                     <input type="file" id="art-pdf-file" accept="application/pdf" style="margin-bottom: 15px;">
                     
                     <button class="btn" onclick="createArticle()">פרסם מאמר / העלה PDF</button>
                 </div>
 
                 <div class="admin-box">
-    <h3>הוספת מדיה (קובץ מהמחשב או קישור חיצוני ליוטיוב)</h3>
-    <select id="med-type">
-        <option value="image">תמונה</option>
-        <option value="video">סרטון וידאו</option>
-        <option value="youtube">קישור יוטיוב</option>
-    </select>
-    <input type="text" id="med-title" placeholder="כותרת המדיה">
-    <input type="file" id="med-file" placeholder="בחר קובץ מהמחשב">
-    <input type="text" id="med-external-url" placeholder="או הדבק כאן קישור חיצוני ליוטיוב (embed)">
-    <button class="btn" onclick="createMediaFile()">העלה קובץ / הוסף קישור</button>
-</div>
+                    <h3>הוספת מדיה (קובץ מהמחשב או קישור חיצוני ליוטיוב)</h3>
+                    <select id="med-type">
+                        <option value="image">תמונה</option>
+                        <option value="video">סרטון וידאו</option>
+                        <option value="youtube">קישור יוטיוב</option>
+                    </select>
+                    <input type="text" id="med-title" placeholder="כותרת המדיה">
+                    <input type="file" id="med-file" placeholder="בחר קובץ מהמחשב">
+                    <input type="text" id="med-external-url" placeholder="או הדבק כאן קישור חיצוני ליוטיוב (embed)">
+                    <button class="btn" onclick="createMediaFile()">העלה קובץ / הוסף קישור</button>
+                </div>
+
                 <div class="admin-box">
                     <h3>ניהול ותוכן קיים (מחיקת פריטים)</h3>
                     <div id="admin-list">טוען רשימת תכנים...</div>
@@ -187,7 +189,6 @@
         לתיאום אימון ללא עלות - עמי 054-4257645
     </footer>
 
-    <!-- כל הסקריפטים מוקפים כראוי בתוך תגית script -->
     <script>
         let password = "";
         let currentArticles = [];
@@ -217,7 +218,7 @@
                 });
         }
 
-      function loadMedia() {
+        function loadMedia() {
             fetch('/api/media')
                 .then(res => res.json())
                 .then(data => {
@@ -229,7 +230,6 @@
                         if (med.type === 'video') {
                             mediaContent = `<video controls width="100%" style="border-radius:8px; max-height:200px;"><source src="${med.url}" type="video/mp4">הדפדפן שלך אינו תומך בוידאו.</video>`;
                         } else if (med.type === 'youtube') {
-                            // יצירת ה-iframe בדיוק פעם אחת בתוך מעטפת מעוצבת
                             mediaContent = `<div class="video-container"><iframe src="${med.url}" allowfullscreen></iframe></div>`;
                         } else {
                             mediaContent = `<img src="${med.url}" alt="${med.title}" onclick="openImageModal('${med.url}', '${escapeHtml(med.title)}')">`;
@@ -292,41 +292,41 @@
             }).catch(err => alert(err.message || 'סיסמה שגויה או שגיאה בשמירה'));
         }
 
-function createMediaFile() {
-    const type = document.getElementById('med-type').value;
-    const title = document.getElementById('med-title').value;
-    const fileInput = document.getElementById('med-file');
-    const externalUrl = document.getElementById('med-external-url').value;
+        function createMediaFile() {
+            const type = document.getElementById('med-type').value;
+            const title = document.getElementById('med-title').value;
+            const fileInput = document.getElementById('med-file');
+            const externalUrl = document.getElementById('med-external-url').value;
 
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('type', type);
-    formData.append('password', password);
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('type', type);
+            formData.append('password', password);
 
-    if (fileInput.files.length > 0) {
-        formData.append('mediaFile', fileInput.files[0]);
-    } else if (externalUrl) {
-        formData.append('externalUrl', externalUrl);
-    } else {
-        alert('נא לבחור קובץ להעלאה או להזין קישור חיצוני');
-        return;
-    }
+            if (fileInput.files.length > 0) {
+                formData.append('mediaFile', fileInput.files[0]);
+            } else if (externalUrl) {
+                formData.append('externalUrl', externalUrl);
+            } else {
+                alert('נא לבחור קובץ להעלאה או להזין קישור חיצוני');
+                return;
+            }
 
-    fetch('/api/media', {
-        method: 'POST',
-        body: formData
-    }).then(res => {
-        if (!res.ok) return res.json().then(err => { throw new Error(err.error); });
-        return res.json();
-    })
-    .then(() => {
-        alert('הפריט נוסף בהצלחה!');
-        document.getElementById('med-title').value = '';
-        document.getElementById('med-external-url').value = '';
-        fileInput.value = '';
-        loadAdminManager();
-    }).catch(err => alert(err.message || 'שגיאה בהוספת הפריט'));
-}
+            fetch('/api/media', {
+                method: 'POST',
+                body: formData
+            }).then(res => {
+                if (!res.ok) return res.json().then(err => { throw new Error(err.error); });
+                return res.json();
+            })
+            .then(() => {
+                alert('הפריט נוסף בהצלחה!');
+                document.getElementById('med-title').value = '';
+                document.getElementById('med-external-url').value = '';
+                fileInput.value = '';
+                loadAdminManager();
+            }).catch(err => alert(err.message || 'שגיאה בהוספת הפריט'));
+        }
 
         function removeArticle(id) {
             if (!confirm('האם למחוק מאמר זה?')) return;
@@ -350,7 +350,6 @@ function createMediaFile() {
             const listContainer = document.getElementById('admin-list');
             listContainer.innerHTML = 'טוען רשימת תכנים...';
 
-            // טעינת מאמרים בנפרד
             fetch('/api/articles')
                 .then(res => res.json())
                 .then(arts => {
@@ -365,7 +364,6 @@ function createMediaFile() {
                     }
                     html += '</ul>';
 
-                    // טעינת מדיה בנפרד
                     fetch('/api/media')
                         .then(res => res.json())
                         .then(meds => {
@@ -380,7 +378,6 @@ function createMediaFile() {
                             }
                             html += '</ul>';
                             
-                            // הצגת הכל יחד במסך הניהול
                             listContainer.innerHTML = html;
                         })
                         .catch(err => {
@@ -395,7 +392,6 @@ function createMediaFile() {
                 });
         }
 
-        
         function openImageModal(url, title) {
             const modal = document.getElementById('viewModal');
             const body = document.getElementById('modal-content-body');
