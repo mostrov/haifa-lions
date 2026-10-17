@@ -9,7 +9,6 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -44,7 +43,7 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'haifa_lions_media',
-        resource_type: 'auto', // מאפשר העלאת תמונות, סרטונים ו-PDF בצורה אוטומטית
+        resource_type: 'auto',
         allowed_formats: ['jpg', 'jpeg', 'jfif', 'png', 'webp', 'mp4', 'mov', 'avi', 'mkv', 'pdf']
     }
 });
@@ -54,6 +53,7 @@ const upload = multer({
     limits: { fileSize: 50 * 1024 * 1024 }
 });
 
+// --- ניהול מאמרים וקבצי PDF ---
 app.get('/api/articles', async (req, res) => {
     try { res.json(await Article.find()); } 
     catch (err) { res.status(500).json({ error: 'שגיאה בטעינת מאמרים' }); }
@@ -69,10 +69,8 @@ app.post('/api/articles', (req, res) => {
         try {
             let finalContent = content || '';
             
-            // אם הועלה קובץ PDF, ניקח את הקישור שלו מהענן ונוסיף כפתור צפייה
             if (req.file) {
                 const pdfUrl = req.file.path;
-                const docTitle = title || req.file.originalname || 'מסמך PDF';
                 finalContent += `<br><br><a href="${pdfUrl}" target="_blank" class="btn" style="display:inline-block; text-decoration:none; margin-top:10px;">📄 צפה או הורד מסמך PDF</a>`;
             }
 
@@ -103,6 +101,7 @@ app.delete('/api/articles/:id', async (req, res) => {
     } catch (err) { res.status(500).json({ error: 'שגיאה במחיקה' }); }
 });
 
+// --- ניהול מדיה (תמונות, סרטונים ויוטיוב) ---
 app.get('/api/media', async (req, res) => {
     try { res.json(await Media.find()); } 
     catch (err) { res.status(500).json({ error: 'שגיאה בטעינת מדיה' }); }
@@ -120,23 +119,6 @@ app.post('/api/media', (req, res) => {
 
         if (req.file) {
             fileUrl = req.file.path; 
-            
-            // אם הקובץ שהועלה הוא PDF, נשמור אותו ישר כמאמר חדש!
-            if (req.file.mimetype === 'application/pdf') {
-                try {
-                    const newArticle = new Article({
-                        id: Date.now(),
-                        title: title || 'מסמך PDF',
-                        content: `מסמך PDF רשמי של הקבוצה. לצפייה או הורדה לחץ על הקישור הבא: ${fileUrl}`,
-                        date: new Date().toISOString().split('T')[0]
-                    });
-                    await newArticle.save();
-                    return res.status(201).json(newArticle);
-                } catch (dbErr) {
-                    return res.status(500).json({ error: 'שגיאה בשמירת מסמך ה-PDF כמאמר' });
-                }
-            }
-
             if (req.file.mimetype && req.file.mimetype.startsWith('video/')) mediaType = 'video';
             else mediaType = 'image';
         } else if (externalUrl) {
