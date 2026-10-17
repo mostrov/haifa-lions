@@ -97,21 +97,35 @@ app.post('/api/media', (req, res) => {
         let mediaType = type || 'image';
 
         if (req.file) {
-            // Cloudinary מחזיר לנו ישירות את הקישור המאובטח בענן בתוך req.file.path
             fileUrl = req.file.path; 
-            if (req.file.mimetype === 'application/pdf') mediaType = 'pdf';
-            else if (req.file.mimetype && req.file.mimetype.startsWith('video/')) mediaType = 'video';
+            
+            // אם הקובץ שהועלה הוא PDF, נשמור אותו ישר כמאמר חדש!
+            if (req.file.mimetype === 'application/pdf') {
+                try {
+                    const newArticle = new Article({
+                        id: Date.now(),
+                        title: title || 'מסמך PDF',
+                        content: `מסמך PDF רשמי של הקבוצה. לצפייה או הורדה לחץ על הקישור הבא: ${fileUrl}`,
+                        date: new Date().toISOString().split('T')[0]
+                    });
+                    await newArticle.save();
+                    return res.status(201).json(newArticle);
+                } catch (dbErr) {
+                    return res.status(500).json({ error: 'שגיאה בשמירת מסמך ה-PDF כמאמר' });
+                }
+            }
+
+            if (req.file.mimetype && req.file.mimetype.startsWith('video/')) mediaType = 'video';
             else mediaType = 'image';
         } else if (externalUrl) {
             let finalUrl = externalUrl;
-            // המרה אוטומטית של קישור יוטיוב רגיל לקישור Embed תקין
             if (externalUrl.includes('watch?v=')) {
                 const videoId = externalUrl.split('watch?v=')[1].split('&')[0];
                 finalUrl = `https://www.youtube.com/embed/${videoId}`;
             } else if (externalUrl.includes('youtu.be/')) {
                 const videoId = externalUrl.split('youtu.be/')[1].split('?')[0];
                 finalUrl = `https://www.youtube.com/embed/${videoId}`;
-            }  
+            }
             fileUrl = finalUrl;
             mediaType = 'youtube';
         } else {
