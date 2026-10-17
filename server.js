@@ -68,10 +68,11 @@ app.post('/api/articles', (req, res) => {
 
         try {
             let finalContent = content || '';
+            let pdfUrl = '';
             
+            // אם הועלה קובץ PDF, נשמור את הכתובת הישירה שלו
             if (req.file) {
-                const pdfUrl = req.file.path;
-                finalContent += `<br><br><a href="${pdfUrl}" target="_blank" class="btn" style="display:inline-block; text-decoration:none; margin-top:10px;">📄 צפה או הורד מסמך PDF</a>`;
+                pdfUrl = req.file.path;
             }
 
             if (!title && !req.file) return res.status(400).json({ error: 'יש להזין כותרת או להעלות קובץ PDF' });
@@ -79,26 +80,25 @@ app.post('/api/articles', (req, res) => {
             const newArticle = new Article({ 
                 id: Date.now(), 
                 title: title || (req.file ? req.file.originalname : 'ללא כותרת'), 
-                content: finalContent, 
+                content: finalContent,
+                // נשמור את קישור ה-PDF בשדה ייעודי אם תרצי, או נשלב אותו בתוכן בצורה חכמה
                 date: new Date().toISOString().split('T')[0] 
             });
             
+            // שינוי קטן: נשמור את הקישור ישירות במסמך (נוודא שהסכימה תומכת או נצרף לתוכן בצורה נקייה)
+            // לצורך הפשטות, נשמור את כתובת ה-PDF בתוך ה-content בצורה מובנית:
+            if (req.file) {
+                newArticle.content = JSON.stringify({ text: content || '', pdfUrl: req.file.path });
+            } else {
+                newArticle.content = JSON.stringify({ text: content || '', pdfUrl: '' });
+            }
+
             await newArticle.save();
             res.status(201).json(newArticle);
         } catch (dbErr) { 
             res.status(500).json({ error: 'שגיאה בשמירת המאמר' }); 
         }
     });
-});
-
-app.delete('/api/articles/:id', async (req, res) => {
-    const { password } = req.body;
-    if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
-    
-    try {
-        await Article.findOneAndDelete({ id: Number(req.params.id) });
-        res.json({ message: 'נמחק בהצלחה' });
-    } catch (err) { res.status(500).json({ error: 'שגיאה במחיקה' }); }
 });
 
 // --- ניהול מדיה (תמונות, סרטונים ויוטיוב) ---
