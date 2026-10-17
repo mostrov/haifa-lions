@@ -38,12 +38,18 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// הגדרת אחסון וסינון דרך Cloudinary
+// הגדרת אחסון וסינון דרך Cloudinary עם התאמה חכמה לסוג הקובץ
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'haifa_lions_media',
-        resource_type: 'auto',
+        // התאמה חכמה: קבצי PDF יוגדרו כ-raw/auto כדי למנוע חסימות ACL, והשאר יישארו אוטומטיים
+        resource_type: (req, file) => {
+            if (file.mimetype === 'application/pdf') {
+                return 'raw';
+            }
+            return 'auto';
+        },
         allowed_formats: ['jpg', 'jpeg', 'jfif', 'png', 'webp', 'mp4', 'mov', 'avi', 'mkv', 'pdf']
     }
 });
