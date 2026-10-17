@@ -42,8 +42,8 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'haifa_lions_media',
-        resource_type: 'auto',
-        allowed_formats: ['jpg', 'jpeg', 'jfif', 'png', 'webp', 'mp4', 'mov', 'avi', 'mkv', 'docx', 'doc']
+        resource_type: 'auto'
+        // הסרנו את allowed_formats כדי שקלאודינרי לא יחסום קבצי Word חדשים
     }
 });
 
