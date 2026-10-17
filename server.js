@@ -63,38 +63,24 @@ app.get('/api/articles', async (req, res) => {
 });
 
 app.post('/api/articles', (req, res) => {
-    upload.single('pdfFile')(req, res, async function (err) {
-        if (err) return res.status(400).json({ error: 'שגיאה בהעלאת קובץ ה-PDF.' });
+    upload.single('docFile')(req, res, async function (err) {
+        if (err) return res.status(400).json({ error: 'שגיאה בהעלאת קובץ ה-Word.' });
 
         const { title, content, password } = req.body;
         if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
 
         try {
             let finalContent = content || '';
-            let pdfUrl = '';
-            
-            // אם הועלה קובץ PDF, נשמור את הכתובת הישירה שלו
-            if (req.file) {
-                pdfUrl = req.file.path;
-            }
+            let docUrl = req.file ? req.file.path : '';
 
-            if (!title && !req.file) return res.status(400).json({ error: 'יש להזין כותרת או להעלות קובץ PDF' });
+            if (!title && !req.file) return res.status(400).json({ error: 'יש להזין כותרת או להעלות קובץ Word' });
 
             const newArticle = new Article({ 
                 id: Date.now(), 
                 title: title || (req.file ? req.file.originalname : 'ללא כותרת'), 
-                content: finalContent,
-                // נשמור את קישור ה-PDF בשדה ייעודי אם תרצי, או נשלב אותו בתוכן בצורה חכמה
+                content: JSON.stringify({ text: content || '', docUrl: docUrl }),
                 date: new Date().toISOString().split('T')[0] 
             });
-            
-            // שינוי קטן: נשמור את הקישור ישירות במסמך (נוודא שהסכימה תומכת או נצרף לתוכן בצורה נקייה)
-            // לצורך הפשטות, נשמור את כתובת ה-PDF בתוך ה-content בצורה מובנית:
-            if (req.file) {
-                newArticle.content = JSON.stringify({ text: content || '', pdfUrl: req.file.path });
-            } else {
-                newArticle.content = JSON.stringify({ text: content || '', pdfUrl: '' });
-            }
 
             await newArticle.save();
             res.status(201).json(newArticle);
