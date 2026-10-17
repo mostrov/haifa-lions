@@ -43,11 +43,45 @@ const storage = new CloudinaryStorage({
     params: {
         folder: 'haifa_lions_media',
         resource_type: 'auto',
-        format: async (req, file) => {
-            return file.originalname.split('.').pop();
-        },
         allowed_formats: ['jpg', 'jpeg', 'jfif', 'png', 'webp', 'mp4', 'mov', 'avi', 'mkv', 'docx', 'doc']
     }
+});
+
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 50 * 1024 * 1024 }
+});
+
+app.post('/api/articles', (req, res) => {
+    upload.single('docFile')(req, res, async function (err) {
+        if (err) {
+            console.error('Multer Error:', err);
+            return res.status(400).json({ error: 'שגיאה בהעלאת הקובץ. ודא שהקובץ תקין.' });
+        }
+
+        const { title, content, password } = req.body;
+        if (password !== ADMIN_PASSWORD) return res.status(401).json({ error: 'סיסמה שגויה' });
+
+        try {
+            let finalContent = content || '';
+            let docUrl = req.file ? req.file.path : '';
+
+            if (!title && !req.file) return res.status(400).json({ error: 'יש להזין כותרת או להעלות קובץ' });
+
+            const newArticle = new Article({ 
+                id: Date.now(), 
+                title: title || (req.file ? req.file.originalname : 'ללא כותרת'), 
+                content: JSON.stringify({ text: finalContent, docUrl: docUrl }),
+                date: new Date().toISOString().split('T')[0] 
+            });
+
+            await newArticle.save();
+            res.status(201).json(newArticle);
+        } catch (dbErr) { 
+            console.error('DB Error:', dbErr);
+            res.status(500).json({ error: 'שגיאה בשמירת המאמר במסד הנתונים' }); 
+        }
+    });
 });
 
 const upload = multer({ 
