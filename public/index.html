@@ -349,53 +349,53 @@ function createMediaFile() {
         function loadAdminManager() {
             const listContainer = document.getElementById('admin-list');
             listContainer.innerHTML = 'טוען רשימת תכנים...';
-            console.log('מתחיל טעינת נתונים לדף הניהול...');
 
-            Promise.all([
-                fetch('/api/articles')
-                    .then(r => {
-                        console.log('תשובה התקבלה מ-/api/articles, סטטוס:', r.status);
-                        if (!r.ok) throw new Error('שגיאה בטעינת מאמרים');
-                        return r.json();
-                    }),
-                fetch('/api/media')
-                    .then(r => {
-                        console.log('תשובה התקבלה מ-/api/media, סטטוס:', r.status);
-                        if (!r.ok) throw new Error('שגיאה בטעינת מדיה');
-                        return r.json();
-                    })
-            ]).then(([arts, meds]) => {
-                console.log('הנתונים התקבלו בהצלחה:', { arts, meds });
-                
-                let html = '<h4 style="color:var(--primary); margin-bottom:10px;">מאמרים ומסמכי PDF קיימים:</h4><ul style="list-style:none;">';
-                
-                if (!Array.isArray(arts) || arts.length === 0) {
-                    html += '<li style="padding:10px; color:#64748b;">אין מאמרים כרגע.</li>';
-                } else {
-                    arts.forEach(a => {
-                        html += `<li style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; margin-bottom:8px; border-radius:6px; border:1px solid #e2e8f0;"><span>${a.title}</span> <button class="btn btn-danger" onclick="removeArticle(${a.id})">מחק</button></li>`;
-                    });
-                }
+            // טעינת מאמרים בנפרד
+            fetch('/api/articles')
+                .then(res => res.json())
+                .then(arts => {
+                    let html = '<h4 style="color:var(--primary); margin-bottom:10px;">מאמרים ומסמכי PDF קיימים:</h4><ul style="list-style:none;">';
+                    
+                    if (!Array.isArray(arts) || arts.length === 0) {
+                        html += '<li style="padding:10px; color:#64748b;">אין מאמרים כרגע.</li>';
+                    } else {
+                        arts.forEach(a => {
+                            html += `<li style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; margin-bottom:8px; border-radius:6px; border:1px solid #e2e8f0;"><span>${a.title}</span> <button class="btn btn-danger" onclick="removeArticle(${a.id})">מחק</button></li>`;
+                        });
+                    }
+                    html += '</ul>';
 
-                html += '</ul><h4 style="color:var(--primary); margin:20px 0 10px 0;">מדיה קיימת (תמונות, סרטונים ויוטיוב):</h4><ul style="list-style:none;">';
-                
-                if (!Array.isArray(meds) || meds.length === 0) {
-                    html += '<li style="padding:10px; color:#64748b;">אין מדיה להצגה.</li>';
-                } else {
-                    meds.forEach(m => {
-                        html += `<li style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; margin-bottom:8px; border-radius:6px; border:1px solid #e2e8f0;"><span>[${m.type}] ${m.title}</span> <button class="btn btn-danger" onclick="removeMedia(${m.id})">מחק</button></li>`;
-                    });
-                }
-
-                html += '</ul>';
-                listContainer.innerHTML = html;
-            }).catch(err => {
-                console.error("שגיאה קריטית בטעינת נתוני הניהול:", err);
-                listContainer.innerHTML = `<p style="color:red;">שגיאה בטעינת הנתונים מהשרת: ${err.message}</p>`;
-                alert('שגיאה בהתחברות לשרת: ' + err.message);
-            });
+                    // טעינת מדיה בנפרד
+                    fetch('/api/media')
+                        .then(res => res.json())
+                        .then(meds => {
+                            html += '<h4 style="color:var(--primary); margin:20px 0 10px 0;">מדיה קיימת (תמונות, סרטונים ויוטיוב):</h4><ul style="list-style:none;">';
+                            
+                            if (!Array.isArray(meds) || meds.length === 0) {
+                                html += '<li style="padding:10px; color:#64748b;">אין מדיה להצגה.</li>';
+                            } else {
+                                meds.forEach(m => {
+                                    html += `<li style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px 15px; margin-bottom:8px; border-radius:6px; border:1px solid #e2e8f0;"><span>[${m.type}] ${m.title}</span> <button class="btn btn-danger" onclick="removeMedia(${m.id})">מחק</button></li>`;
+                                });
+                            }
+                            html += '</ul>';
+                            
+                            // הצגת הכל יחד במסך הניהול
+                            listContainer.innerHTML = html;
+                        })
+                        .catch(err => {
+                            console.error("שגיאה בטעינת מדיה:", err);
+                            html += '<p style="color:red;">שגיאה בטעינת רשימת המדיה מהשרת.</p>';
+                            listContainer.innerHTML = html;
+                        });
+                })
+                .catch(err => {
+                    console.error("שגיאה בטעינת מאמרים:", err);
+                    listContainer.innerHTML = '<p style="color:red;">שגיאה בטעינת רשימת המאמרים מהשרת.</p>';
+                });
         }
 
+        
         function openImageModal(url, title) {
             const modal = document.getElementById('viewModal');
             const body = document.getElementById('modal-content-body');
