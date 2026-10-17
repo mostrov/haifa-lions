@@ -42,22 +42,11 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'haifa_lions_media',
-        resource_type: (req, file) => {
-            // קבצי PDF יטופלו כקבצים רגילים שישמרו את הסיומת שלהם
-            if (file.mimetype === 'application/pdf') {
-                return 'auto';
-            }
-            return 'auto';
-        },
-        // פורמט מפורש ל-PDF כדי שיירד תמיד עם סיומת .pdf אמיתית
+        resource_type: 'auto',
         format: async (req, file) => {
-            if (file.mimetype === 'application/pdf') {
-                return 'pdf';
-            }
-            // לכל שאר הקבצים נעזר בסיומת המקורית שלהם או ניתן לקלאודינרי לזהות לבד
             return file.originalname.split('.').pop();
         },
-        allowed_formats: ['jpg', 'jpeg', 'jfif', 'png', 'webp', 'mp4', 'mov', 'avi', 'mkv', 'pdf']
+        allowed_formats: ['jpg', 'jpeg', 'jfif', 'png', 'webp', 'mp4', 'mov', 'avi', 'mkv', 'docx', 'doc']
     }
 });
 
